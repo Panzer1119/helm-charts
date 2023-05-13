@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "radarr.fullname" . }}
+  name: {{ include "sonarr.fullname" . }}
   labels:
-    {{- include "radarr.labels" . | nindent 4 }}
+    {{- include "sonarr.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -12,7 +12,7 @@ spec:
     {{- .Values.deployment.strategy | toYaml | nindent 4 }}
   selector:
     matchLabels:
-      {{- include "radarr.selectorLabels" . | nindent 6 }}
+      {{- include "sonarr.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -20,20 +20,20 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "radarr.selectorLabels" . | nindent 8 }}
+        {{- include "sonarr.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "radarr.serviceAccountName" . }}
+      serviceAccountName: {{ include "sonarr.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
         - name: config
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "radarr.fullname" .) }}
+            claimName: {{ .Values.persistence.existingClaim | default (include "sonarr.fullname" .) }}
           {{- else }}
           emptyDir: { }
           {{- end }}

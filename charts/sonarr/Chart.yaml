@@ -1,12 +1,12 @@
 apiVersion: v2
-name: radarr
-description: A Radarr Helm chart for Kubernetes
+name: sonarr
+description: A Sonarr Helm chart for Kubernetes
 
 type: application
 
 version: 0.1.0
 
-# renovate: image=ghcr.io/linuxserver/radarr
+# renovate: image=ghcr.io/linuxserver/sonarr
 appVersion: "version-4.4.4.7068"
 
 icon: https://avatars.githubusercontent.com/u/25025331
@@ -15,8 +15,8 @@ annotations:
     - kind: changed
       description: Created Helm chart
   artifacthub.io/images: |
-    - name: radarr
-      image: ghcr.io/linuxserver/radarr
+    - name: sonarr
+      image: ghcr.io/linuxserver/sonarr
   artifacthub.io/links: |
     - name: Helm Repo
       url: https://github.com/panzer1119/helm-charts

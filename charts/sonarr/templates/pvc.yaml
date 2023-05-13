@@ -2,9 +2,9 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ include "radarr.fullname" . }}
+  name: {{ include "sonarr.fullname" . }}
   labels:
-    {{- include "radarr.labels" . | nindent 4 }}
+    {{- include "sonarr.labels" . | nindent 4 }}
   annotations:
   {{- if .Values.persistence.storageClass }}
     volume.beta.kubernetes.io/storage-class: {{ .Values.persistence.storageClass | quote }}
