@@ -7,7 +7,7 @@ type: application
 version: 0.1.0
 
 # renovate: image=ghcr.io/linuxserver/sonarr
-appVersion: "version-4.4.4.7068"
+appVersion: "version-3.0.10.1567"
 
 icon: https://avatars.githubusercontent.com/u/25025331
 annotations:
