@@ -7,7 +7,7 @@ type: application
 version: 0.1.3
 
 # renovate: image=ghcr.io/linuxserver/sonarr
-appVersion: "version-3.0.10.1567"
+appVersion: "version-3.0.9.1549"
 
 icon: https://avatars.githubusercontent.com/u/1082903
 annotations:
@@ -16,7 +16,7 @@ annotations:
       description: Added version to image annotation
   artifacthub.io/images: |
     - name: sonarr
-      image: ghcr.io/linuxserver/sonarr:version-3.0.10.1567
+      image: ghcr.io/linuxserver/sonarr:version-3.0.9.1549
   artifacthub.io/links: |
     - name: Helm Repo
       url: https://github.com/panzer1119/helm-charts
