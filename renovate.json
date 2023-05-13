@@ -1,6 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "dependencyDashboard": true,
+  "reviewers": [
+    "@Panzer1119",
+  ],
   "extends": [
-    "config:base"
-  ]
+    "config:base",
+    ":semanticCommitTypeAll(chore)",
+    ":timezone(Europe/Berlin)"
+  ],
 }
