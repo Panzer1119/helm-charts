@@ -21,6 +21,9 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@gmail.com"
+          gpg --import <(echo "${{ secrets.GPG_PRIVATE_KEY }}")
+          git config commit.gpgsign true
+          git config user.signingkey "${{ secrets.GPG_KEY_ID }}"
 
       - name: Install Helm
         uses: azure/setup-helm@v3
