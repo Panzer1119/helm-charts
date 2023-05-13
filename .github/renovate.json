@@ -45,6 +45,17 @@
       ],
       "extractVersion": "^(?<version>.+)$",
       "versioning": "regex:^v(?<major>\\d+)(\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?)?$"
+    },
+    {
+      "description": "Workaround for Linuxserver.io Radarr updates",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "linuxserver/radarr"
+      ],
+      "extractVersion": "^(?<version>.+)$",
+      "versioning": "regex:^version-(?<major>\\d+)(\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?)?\\.(?<build>\\d+)$"
     }
   ]
 }
