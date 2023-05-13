@@ -11,5 +11,18 @@
   ],
   "postUpdateOptions": [
     "helmUpdateSubChartArchives"
+  ],
+  "packageRules": [
+    {
+      "description": "Workaround for azure/setup-helm action updates",
+      "matchDepTypes": [
+        "action"
+      ],
+      "matchPackageNames": [
+        "azure/setup-helm"
+      ],
+      "extractVersion": "^(?<version>.+)$",
+      "versioning": "regex:^v(?<major>\\d+)(\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?)?$"
+    }
   ]
 }
