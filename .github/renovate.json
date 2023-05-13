@@ -16,11 +16,10 @@
     {
       "description": "Update docker image references",
       "fileMatch": [
-        "^charts\\/.*\\/Chart\\.yaml$"
+        "(^|/)Chart\\.yaml$"
       ],
       "matchStrings": [
-        "appVersion: (?:\"|')(?<currentValue>.*?)(?:\"|')\\s+",
-        "# renovate: image=(?:(?<registryUrls>.*?)\\/)?(?<depName>.*?\\/.*?)\\s+"
+        "#\\s?renovate: image=(?:(?<registryUrls>.*?)\\/)?(?<depName>.*?\\/.*?)\\s?appVersion:\\s?\\\"?(?<currentValue>[\\w+\\.\\-]*)\""
       ],
       "datasourceTemplate": "docker"
     },
