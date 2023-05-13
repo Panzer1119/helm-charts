@@ -11,5 +11,11 @@
   ],
   "postUpdateOptions": [
     "helmUpdateSubChartArchives"
-  ]
+  ],
+  "helmv3": {
+    "enabled": true,
+    "fileMatch": [
+      "(^|/)Chart\\.yaml$"
+    ]
+  }
 }
