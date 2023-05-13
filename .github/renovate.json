@@ -12,6 +12,30 @@
   "postUpdateOptions": [
     "helmUpdateSubChartArchives"
   ],
+  "regexManagers": [
+    {
+      "description": "Update docker image references",
+      "fileMatch": [
+        "^charts\\/.*\\/Chart\\.yaml$"
+      ],
+      "matchStrings": [
+        "appVersion: '(?<currentValue>.*?)'\\s+",
+        "version: '(?<currentValue>.*?)'\\s+",
+        "# renovate: image=(?:(?<registryUrls>.*?)\\/)?(?<depName>.*?\\/.*?)\\s+"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "description": "Update docker image references",
+      "fileMatch": [
+        "^charts\\/.*\\/Chart\\.yaml$"
+      ],
+      "matchStrings": [
+        "image: (?:(?<registryUrls>.*?)\\/)?(?<depName>.*?\\/.*?):(?<currentValue>.*?)\\s+"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
   "packageRules": [
     {
       "description": "Workaround for azure/setup-helm action updates",
