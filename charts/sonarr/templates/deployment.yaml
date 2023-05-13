@@ -54,7 +54,7 @@ spec:
           {{- end }}
           ports:
             - name: http
-              containerPort: 7878
+              containerPort: 8989
               protocol: TCP
           env:
             {{- range $k,$v := .Values.env }}
