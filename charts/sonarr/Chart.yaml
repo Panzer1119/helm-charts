@@ -4,7 +4,7 @@ description: A Sonarr Helm chart for Kubernetes
 
 type: application
 
-version: 0.1.0
+version: 0.1.1
 
 # renovate: image=ghcr.io/linuxserver/sonarr
 appVersion: "version-3.0.10.1567"
@@ -13,10 +13,10 @@ icon: https://avatars.githubusercontent.com/u/1082903
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Created Helm chart
+      description: Added version to image annotation
   artifacthub.io/images: |
     - name: sonarr
-      image: ghcr.io/linuxserver/sonarr
+      image: ghcr.io/linuxserver/sonarr:version-3.0.10.1567
   artifacthub.io/links: |
     - name: Helm Repo
       url: https://github.com/panzer1119/helm-charts
