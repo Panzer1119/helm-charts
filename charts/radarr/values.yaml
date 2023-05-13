@@ -92,3 +92,14 @@ env:
   TZ: "Europe/Berlin"
   UMASK: "022"
   UMASK_SET: "022"
+
+persistence:
+  storageClass: ""
+  existingClaim: ""
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 800Mi
+  # if you need any additional volumes, you can define them here
+  additionalVolumes: [ ]
+  # if you need any additional volume mounts, you can define them here
+  additionalMounts: [ ]
