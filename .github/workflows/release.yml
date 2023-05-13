@@ -17,13 +17,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@gmail.com"
-          gpg --import <(echo "${{ secrets.GPG_PRIVATE_KEY }}")
-          git config commit.gpgsign true
-          git config user.signingkey "${{ secrets.GPG_KEY_ID }}"
 
       - name: Install Helm
         uses: azure/setup-helm@v3
