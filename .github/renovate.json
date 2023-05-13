@@ -19,7 +19,7 @@
         "^charts\\/.*\\/Chart\\.yaml$"
       ],
       "matchStrings": [
-        "appVersion: (\"|')(?<currentValue>.*?)\\1\\s+",
+        "appVersion: (?:\"|')(?<currentValue>.*?)(?:\"|')\\s+",
         "# renovate: image=(?:(?<registryUrls>.*?)\\/)?(?<depName>.*?\\/.*?)\\s+"
       ],
       "datasourceTemplate": "docker"
