@@ -9,7 +9,7 @@ version: 0.1.0
 # renovate: image=ghcr.io/linuxserver/sonarr
 appVersion: "version-3.0.10.1567"
 
-icon: https://avatars.githubusercontent.com/u/25025331
+icon: https://avatars.githubusercontent.com/u/1082903
 annotations:
   artifacthub.io/changes: |
     - kind: changed
