@@ -10,6 +10,11 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+deployment:
+  # -- Deployment strategy
+  strategy:
+    type: Recreate
+
 imagePullSecrets: [ ]
 nameOverride: ""
 fullnameOverride: ""
