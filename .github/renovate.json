@@ -8,5 +8,8 @@
     "config:base",
     ":semanticCommitTypeAll(chore)",
     ":timezone(Europe/Berlin)"
+  ],
+  "postUpdateOptions": [
+    "helmUpdateSubChartArchives"
   ]
 }
