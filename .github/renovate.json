@@ -20,7 +20,6 @@
       ],
       "matchStrings": [
         "appVersion: '(?<currentValue>.*?)'\\s+",
-        "version: '(?<currentValue>.*?)'\\s+",
         "# renovate: image=(?:(?<registryUrls>.*?)\\/)?(?<depName>.*?\\/.*?)\\s+"
       ],
       "datasourceTemplate": "docker"
