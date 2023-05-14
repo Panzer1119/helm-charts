@@ -1,5 +1,7 @@
 # helm-charts
 
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/panzer1119)](https://artifacthub.io/packages/search?repo=panzer1119)
+
 ## Usage
 
 [Helm](https://helm.sh) must be installed to use the charts.  Please refer to
