@@ -13,6 +13,27 @@ entries:
           url: https://github.com/panzer1119/helm-charts
     apiVersion: v2
     appVersion: version-4.4.4.7068
+    created: "2023-05-14T12:48:16.002781787Z"
+    description: A Radarr Helm chart for Kubernetes
+    digest: d54d2067fcd5c154f597a46d7dda7a46656bac17b2a1214378e357747237c13e
+    icon: https://avatars.githubusercontent.com/u/25025331
+    name: radarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/radarr-0.1.3/radarr-0.1.3.tgz
+    version: 0.1.3
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Added version to image annotation
+      artifacthub.io/images: |
+        - name: radarr
+          image: ghcr.io/linuxserver/radarr:version-4.4.4.7068
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/panzer1119/helm-charts
+    apiVersion: v2
+    appVersion: version-4.4.4.7068
     created: "2023-05-13T12:47:48.500457566Z"
     description: A Radarr Helm chart for Kubernetes
     digest: 976b05f86b210be320c6ff170e8a4cd69ee4dd0ccfcbc0dd5707fbfd9694f86b
@@ -149,4 +170,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-14T12:43:10.709250195Z"
+generated: "2023-05-14T12:48:16.002812189Z"
