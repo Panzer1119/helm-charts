@@ -110,6 +110,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Updated to version 3.0.10.1567-ls191
+      artifacthub.io/images: |
+        - name: sonarr
+          image: ghcr.io/linuxserver/sonarr:3.0.10.1567-ls191
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/panzer1119/helm-charts
+    apiVersion: v2
+    appVersion: 3.0.10.1567-ls191
+    created: "2023-05-14T14:04:13.836432914Z"
+    description: A Sonarr Helm chart for Kubernetes
+    digest: 641a0bed22b63651842306774db32d6cabb6e6263d03ee1b00302a69fa595170
+    icon: https://avatars.githubusercontent.com/u/1082903
+    name: sonarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.7/sonarr-0.1.7.tgz
+    version: 0.1.7
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Switched to a different version scheme
       artifacthub.io/images: |
         - name: sonarr
@@ -254,4 +275,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-14T13:32:29.542502064Z"
+generated: "2023-05-14T14:04:13.836463915Z"
