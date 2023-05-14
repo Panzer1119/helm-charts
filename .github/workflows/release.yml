@@ -35,7 +35,16 @@ jobs:
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
 
+      - name: Import GPG key for Chart Releaser
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --dearmor --output keyring.gpg
+          echo "${{ secrets.PASSPHRASE }}" > passphrase-file.txt
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
         env:
+          CR_KEY: "${{ secrets.GPG_KEY }}"
+          CR_KEYRING: "keyring.gpg"
+          CR_PASSPHRASE_FILE: "passphrase-file.txt"
+          CR_SIGN: true
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
