@@ -4,19 +4,19 @@ description: A Radarr Helm chart for Kubernetes
 
 type: application
 
-version: 0.1.5
+version: 0.1.6
 
 # renovate: image=ghcr.io/linuxserver/radarr
-appVersion: "4.4.4.7068-ls170"
+appVersion: "4.4.4.7068-ls171"
 
 icon: https://avatars.githubusercontent.com/u/25025331
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Switched to a different version scheme
+      description: Updated to version 4.4.4.7068-ls171
   artifacthub.io/images: |
     - name: radarr
-      image: ghcr.io/linuxserver/radarr:4.4.4.7068-ls170
+      image: ghcr.io/linuxserver/radarr:4.4.4.7068-ls171
   artifacthub.io/links: |
     - name: Helm Repo
       url: https://github.com/panzer1119/helm-charts
