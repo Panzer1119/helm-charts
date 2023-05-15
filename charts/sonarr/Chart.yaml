@@ -1,10 +1,10 @@
 apiVersion: v2
 name: sonarr
-description: A Sonarr Helm chart for Kubernetes
+description: A Sonarr Helm chart for Kubernetes. Warning This chart is currently in alpha and hasn't been tested yet.
 
 type: application
 
-version: 0.1.7
+version: 0.1.8
 
 # renovate: image=ghcr.io/linuxserver/sonarr
 appVersion: "3.0.10.1567-ls191"
