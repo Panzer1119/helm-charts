@@ -1,10 +1,10 @@
 apiVersion: v2
 name: radarr
-description: A Radarr Helm chart for Kubernetes
+description: A Radarr Helm chart for Kubernetes. Warning This chart is currently in alpha and hasn't been tested yet.
 
 type: application
 
-version: 0.1.6
+version: 0.1.7
 
 # renovate: image=ghcr.io/linuxserver/radarr
 appVersion: "4.4.4.7068-ls171"
