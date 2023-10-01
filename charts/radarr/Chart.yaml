@@ -7,7 +7,7 @@ type: application
 version: 0.1.7
 
 # renovate: image=ghcr.io/linuxserver/radarr
-appVersion: "4.4.4.7068-ls171"
+appVersion: "4.7.5.7809-ls189"
 
 icon: https://avatars.githubusercontent.com/u/25025331
 annotations:
@@ -16,7 +16,7 @@ annotations:
       description: Updated to version 4.4.4.7068-ls171
   artifacthub.io/images: |
     - name: radarr
-      image: ghcr.io/linuxserver/radarr:4.4.4.7068-ls171
+      image: ghcr.io/linuxserver/radarr:4.7.5.7809-ls189
   artifacthub.io/links: |
     - name: Helm Repo
       url: https://github.com/panzer1119/helm-charts
