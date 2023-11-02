@@ -41,7 +41,7 @@ jobs:
           echo "${{ secrets.PASSPHRASE }}" > passphrase-file.txt
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
+        uses: helm/chart-releaser-action@v1.6.0
         env:
           CR_KEY: "${{ secrets.GPG_KEY }}"
           CR_KEYRING: "keyring.gpg"
