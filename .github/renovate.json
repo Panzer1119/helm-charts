@@ -57,11 +57,12 @@
       "versioning": "regex:^version-v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     }
   ],
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "description": "Update docker image references",
-      "fileMatch": [
-        "(^|/)Chart\\.yaml$"
+      "managerFilePatterns": [
+        "/(^|/)Chart\\.yaml$/"
       ],
       "matchStrings": [
         "#\\s?renovate: image=(?:(?<registryUrls>.*?)\\/)?(?<depName>.*?\\/.*?)\\s?appVersion:\\s?\\\"?(?<currentValue>[\\w+\\.\\-]*)\""
