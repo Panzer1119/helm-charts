@@ -1,39 +1,36 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "dependencyDashboard": true,
-  "assignees": [
-    "@Panzer1119"
-  ],
   "extends": [
-    "config:base",
-    ":semanticCommitTypeAll(chore)",
-    ":timezone(Europe/Berlin)"
+    "config:best-practices",
+    ":automergeAll",
+    ":automergeBranch",
+    ":automergeDigest",
+    ":automergePatch",
+    ":dependencyDashboard",
+    ":enableVulnerabilityAlertsWithLabel('security')",
+    ":preserveSemverRanges",
+    ":rebaseStalePrs",
+    ":separateMultipleMajorReleases",
+    ":skipStatusChecks",
+    ":timezone(Europe/Berlin)",
+    "group:recommended",
+    "schedule:daily"
   ],
-  "postUpdateOptions": [
-    "helmUpdateSubChartArchives"
+  "kubernetes": {
+    "managerFilePatterns": [
+      "/\\.ya?ml$/"
+    ]
+  },
+  "labels": [
+    "renovate"
   ],
-  "regexManagers": [
-    {
-      "description": "Update docker image references",
-      "fileMatch": [
-        "(^|/)Chart\\.yaml$"
-      ],
-      "matchStrings": [
-        "#\\s?renovate: image=(?:(?<registryUrls>.*?)\\/)?(?<depName>.*?\\/.*?)\\s?appVersion:\\s?\\\"?(?<currentValue>[\\w+\\.\\-]*)\""
-      ],
-      "datasourceTemplate": "docker"
-    },
-    {
-      "description": "Update docker image references",
-      "fileMatch": [
-        "^charts\\/.*\\/Chart\\.yaml$"
-      ],
-      "matchStrings": [
-        "image: (?:(?<registryUrls>.*?)\\/)?(?<depName>.*?\\/.*?):(?<currentValue>.*?)\\s+"
-      ],
-      "datasourceTemplate": "docker"
-    }
-  ],
+  "major": {
+    "dependencyDashboardApproval": true,
+    "automerge": false
+  },
+  "minor": {
+    "automerge": false
+  },
   "packageRules": [
     {
       "description": "Workaround for azure/setup-helm action updates",
@@ -47,16 +44,34 @@
       "versioning": "regex:^v(?<major>\\d+)(\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?)?$"
     },
     {
-      "description": "Workaround for Linuxserver.io Radarr and Sonarr updates",
+      "description": "Parse version tags of linuxserver.io images",
       "matchDatasources": [
         "docker"
       ],
       "matchPackageNames": [
-        "linuxserver/radarr",
-        "linuxserver/sonarr"
+        "/^(ghcr|lscr).io\\/linuxserver\\/.*$/",
+        "!ghcr.io/linuxserver/prowlarr",
+        "!ghcr.io/linuxserver/radarr",
+        "!ghcr.io/linuxserver/sonarr"
       ],
-      "extractVersion": "^(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+-ls\\d+)$",
-      "versioning": "loose"
+      "versioning": "regex:^version-v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     }
-  ]
+  ],
+  "regexManagers": [
+    {
+      "description": "Update docker image references",
+      "fileMatch": [
+        "(^|/)Chart\\.yaml$"
+      ],
+      "matchStrings": [
+        "#\\s?renovate: image=(?:(?<registryUrls>.*?)\\/)?(?<depName>.*?\\/.*?)\\s?appVersion:\\s?\\\"?(?<currentValue>[\\w+\\.\\-]*)\""
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "postUpdateOptions": [
+    "helmUpdateSubChartArchives"
+  ],
+  "separateMinorPatch": true,
+  "stopUpdatingLabel": "renovate/stop_updating"
 }
