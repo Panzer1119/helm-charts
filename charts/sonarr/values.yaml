@@ -1,3 +1,4 @@
+---
 # Default values for sonarr.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -103,3 +104,4 @@ persistence:
   additionalVolumes: [ ]
   # if you need any additional volume mounts, you can define them here
   additionalMounts: [ ]
+...
