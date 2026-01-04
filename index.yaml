@@ -3,6 +3,28 @@ entries:
   prowlarr:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Set default port and add environment variables to values.yaml
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 2.3.0.5236-ls134
+    created: "2026-01-04T23:20:16.928627487Z"
+    description: A Prowlarr Helm chart for Kubernetes. Warning This chart is currently
+      in alpha and hasn't been tested yet.
+    digest: 07653eadc13be37247ec58f71a3546056c1143f79675c2eedfe230c92850bd1f
+    icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/refs/heads/develop/Logo/1024.png
+    name: prowlarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/prowlarr-0.1.2/prowlarr-0.1.2.tgz
+    version: 0.1.2
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Added a warning about alpha status and a README.md file.
       artifacthub.io/links: |
@@ -384,4 +406,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-04T22:57:29.873869713Z"
+generated: "2026-01-04T23:20:17.229144031Z"
