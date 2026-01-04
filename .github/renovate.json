@@ -33,7 +33,7 @@
   },
   "packageRules": [
     {
-      "matchManagers": ["helm-values"],
+      "matchManagers": ["helm-values", "regex"],
       "pinDigests": false
     },
     {
