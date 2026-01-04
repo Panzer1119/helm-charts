@@ -32,8 +32,6 @@ jobs:
 
       - name: Install Helm
         uses: azure/setup-helm@v4.3.1
-        with:
-          token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Import GPG key for Chart Releaser
         run: |
