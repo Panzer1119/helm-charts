@@ -40,6 +40,8 @@ jobs:
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.7.0
+        with:
+          skip_existing: true
         env:
           CR_KEY: "${{ secrets.GPG_KEY }}"
           CR_KEYRING: "keyring.gpg"
