@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v5
+        uses: crazy-max/ghaction-import-gpg@v6
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
@@ -31,7 +31,7 @@ jobs:
           git config user.email "$GITHUB_ACTOR@gmail.com"
 
       - name: Install Helm
-        uses: azure/setup-helm@v3.5
+        uses: azure/setup-helm@v4.3.1
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -41,10 +41,11 @@ jobs:
           echo "${{ secrets.PASSPHRASE }}" > passphrase-file.txt
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
+        uses: helm/chart-releaser-action@v1.7.0
         env:
           CR_KEY: "${{ secrets.GPG_KEY }}"
           CR_KEYRING: "keyring.gpg"
           CR_PASSPHRASE_FILE: "passphrase-file.txt"
           CR_SIGN: true
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+...
