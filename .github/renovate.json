@@ -33,6 +33,10 @@
   },
   "packageRules": [
     {
+      "matchManagers": ["helm-values"],
+      "pinDigests": false
+    },
+    {
       "description": "Workaround for azure/setup-helm action updates",
       "matchDepTypes": [
         "action"
