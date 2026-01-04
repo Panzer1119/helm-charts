@@ -1,16 +1,16 @@
 ---
 apiVersion: "v2"
 name: "prowlarr"
-description: "A Prowlarr Helm chart for Kubernetes."
+description: "A Prowlarr Helm chart for Kubernetes. Warning This chart is currently in alpha and hasn't been tested yet."
 type: "application"
-version: "0.1.0"
+version: "0.1.1"
 # renovate: image=ghcr.io/linuxserver/prowlarr
 appVersion: "2.3.0.5236-ls134"
 icon: "https://raw.githubusercontent.com/Prowlarr/Prowlarr/refs/heads/develop/Logo/1024.png"
 annotations:
   artifacthub.io/changes: |
-    - kind: added
-      description: Initial release of Prowlarr chart version 0.1.0
+    - kind: changed
+      description: Added a warning about alpha status and a README.md file.
   artifacthub.io/links: |
     - name: Helm Repo
       url: https://github.com/Panzer1119/helm-charts
