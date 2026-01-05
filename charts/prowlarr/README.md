@@ -7,3 +7,7 @@ This chart deploys [Prowlarr](https://github.com/Prowlarr/Prowlarr), an indexer 
 
 > **Warning**
 > This chart is currently in alpha and hasn't been tested yet.
+
+## API key Secret
+
+This chart can sync Prowlarr's API key (from `/config/config.xml`) into a Kubernetes Secret via the `apikey-sync` sidecar.

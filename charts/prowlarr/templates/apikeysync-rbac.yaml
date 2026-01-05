@@ -8,6 +8,9 @@ rules:
   - apiGroups: [""]
     resources: ["secrets"]
     verbs: ["create", "delete", "get", "list", "patch", "update"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -22,4 +25,3 @@ roleRef:
   kind: Role
   name: {{ include "prowlarr.fullname" . }}-apikey-sync
   apiGroup: rbac.authorization.k8s.io
-

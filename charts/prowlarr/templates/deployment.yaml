@@ -164,6 +164,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: OWNERREF_NAME
+              value: {{ include "prowlarr.fullname" . | quote }}
           command: [ "/bin/sh", "-c" ]
           args:
             - |
@@ -211,8 +213,15 @@ spec:
 
               kubectl -n "$NAMESPACE" create secret generic "$SECRET_NAME" \
                 --from-literal="$SECRET_KEY=$API_KEY" \
-                --dry-run=client -o yaml \
+                --dry-run=client -o json \
               | kubectl apply -f -
+
+                OWNER_UID=$(kubectl -n "$NAMESPACE" get "Deployment" "$OWNERREF_NAME" -o jsonpath='{.metadata.uid}')
+                if [ -n "$OWNER_UID" ]; then
+                  kubectl -n "$NAMESPACE" patch secret "$SECRET_NAME" --type=merge -p "{\"metadata\":{\"ownerReferences\":[{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"name\":\"$OWNERREF_NAME\",\"uid\":\"$OWNER_UID\",\"controller\":true,\"blockOwnerDeletion\":true}]}}"
+                else
+                  echo "WARNING: owner UID not found for Deployment/$OWNERREF_NAME; not setting ownerReferences"
+                fi
 
               echo "Prowlarr API key secret synced: $SECRET_NAME"
 
