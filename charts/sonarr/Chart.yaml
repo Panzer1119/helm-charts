@@ -16,7 +16,7 @@ annotations:
       description: Updated to version 3.0.10.1567-ls191
   artifacthub.io/images: |
     - name: sonarr
-      image: ghcr.io/linuxserver/sonarr:3.0.10.1567-ls191@sha256:1a1b17b73878bcf5bbd31577d371a7a5304bd9cf85f74150bb622c5f31856eba
+      image: ghcr.io/linuxserver/sonarr:3.0.10.1567-ls218@sha256:4f69472a0cdea29e23967db6a3395487539b759def3920327d1f49ae00b9dfd4
   artifacthub.io/links: |
     - name: Helm Repo
       url: https://github.com/panzer1119/helm-charts
