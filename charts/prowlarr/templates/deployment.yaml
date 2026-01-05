@@ -8,6 +8,12 @@ spec:
   selector:
     matchLabels:
       {{- include "prowlarr.selectorLabels" . | nindent 6 }}
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   template:
     metadata:
       {{- with .Values.podAnnotations }}
