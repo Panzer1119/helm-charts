@@ -241,9 +241,17 @@
             }
           },
           "required": ["image"]
+        },
+        "rbac": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "create": { "type": "boolean", "default": true }
+          },
+          "required": ["create"]
         }
       },
-      "required": ["enabled", "name", "key", "configXmlPath", "waitForConfigSeconds", "failIfMissing", "job"]
+      "required": ["enabled", "name", "key", "configXmlPath", "waitForConfigSeconds", "failIfMissing", "rbac", "job"]
     }
   },
 

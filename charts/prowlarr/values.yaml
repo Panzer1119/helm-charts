@@ -106,14 +106,15 @@ apiKeySecret:
   key: "apiKey"
   # Path to config.xml on the /config volume.
   configXmlPath: "/config/config.xml"
-  # IMPORTANT: If your /config PVC uses accessMode ReadWriteOncePod, the sync job cannot mount it
-  # while the main Prowlarr pod is running (Kubernetes will reject the second mount).
-  # In that case either:
-  # - switch persistence.accessMode to ReadWriteOnce (or ReadWriteMany if supported), OR
-  # - set existingSecret and manage the key externally.
   waitForConfigSeconds: 30
   # If true, installation/upgrade fails when config.xml (or ApiKey) can't be read.
   failIfMissing: false
+
+  # Create Role/RoleBinding for the pod's service account so the sidecar can upsert the secret.
+  rbac:
+    create: true
+
+  # Sidecar image (kubectl is used to write the Secret).
   job:
     image:
       repository: "bitnami/kubectl"
