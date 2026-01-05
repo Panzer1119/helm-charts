@@ -3,14 +3,14 @@ apiVersion: "v2"
 name: "sonarr"
 description: "A Sonarr Helm chart for Kubernetes. Warning This chart is currently in alpha and hasn't been tested yet."
 type: "application"
-version: "0.2.0"
+version: "0.2.1"
 # renovate: image=ghcr.io/linuxserver/sonarr
 appVersion: "4.0.16.2944-ls300@sha256:8b9f2138ec50fc9e521960868f79d2ad0d529bc610aef19031ea8ff80b54c5e0"
 icon: "https://avatars.githubusercontent.com/u/1082903"
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Updated Sonarr to v4
+      description: Pinned Sonarr image to a digest
   artifacthub.io/links: |
     - name: Helm Repo
       url: https://github.com/panzer1119/helm-charts
