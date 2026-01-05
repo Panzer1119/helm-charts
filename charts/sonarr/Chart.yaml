@@ -1,19 +1,20 @@
-apiVersion: v2
-name: sonarr
-description: A Sonarr Helm chart for Kubernetes. Warning This chart is currently in alpha and hasn't been tested yet.
-
-type: application
-
-version: 0.1.9
-
+---
+apiVersion: "v2"
+name: "sonarr"
+description: "A Sonarr Helm chart for Kubernetes. Warning This chart is currently in alpha and hasn't been tested yet."
+type: "application"
+version: "0.1.10"
 # renovate: image=ghcr.io/linuxserver/sonarr
 appVersion: "3.0.10.1567-ls191"
-
-icon: https://avatars.githubusercontent.com/u/1082903
+icon: "https://avatars.githubusercontent.com/u/1082903"
 annotations:
   artifacthub.io/changes: |
-    - kind: removed
-      description: Images annotation to let Artifact Hub fetch them automatically
+    - kind: changed
+      description: Formatted Chart.yaml
   artifacthub.io/links: |
     - name: Helm Repo
       url: https://github.com/panzer1119/helm-charts
+  artifacthub.io/maintainers: |
+    - name: Paul Hagedorn
+      email: panzer1119@gmail.com
+...
