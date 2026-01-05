@@ -3,8 +3,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
-
 image:
   repository: "ghcr.io/linuxserver/prowlarr"
   pullPolicy: IfNotPresent
@@ -26,17 +24,9 @@ serviceAccount:
   name: ""
 
 podAnnotations: {}
-
 podSecurityContext: {}
-  # fsGroup: 2000
-
+# fsGroup: 2000
 securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 service:
   type: ClusterIP
@@ -46,41 +36,16 @@ ingress:
   enabled: false
   className: ""
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   hosts:
     - host: prowlarr.local
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls: []
-  #  - secretName: prowlarr-tls
-  #    hosts:
-  #      - prowlarr.local
 
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
 nodeSelector: {}
-
 tolerations: []
-
 affinity: {}
 
 env:
@@ -89,4 +54,45 @@ env:
   TZ: "Europe/Berlin"
   UMASK: "022"
   UMASK_SET: "022"
+
+# Probes that use Prowlarr's health endpoint.
+probes:
+  startup:
+    enabled: true
+    # For slow starts, increase failureThreshold or periodSeconds.
+    periodSeconds: 10
+    timeoutSeconds: 2
+    failureThreshold: 30
+  readiness:
+    enabled: true
+    periodSeconds: 10
+    timeoutSeconds: 2
+    failureThreshold: 3
+  # Liveness is optional (enabled by default) in case you prefer to rely on startup/readiness only.
+  liveness:
+    enabled: true
+    initialDelaySeconds: 120
+    periodSeconds: 60
+    timeoutSeconds: 20
+    failureThreshold: 5
+
+persistence:
+  # /config volume
+  enabled: true
+  existingClaim: ""
+  storageClass: ""
+  accessMode: ReadWriteOncePod
+  size: 10Gi
+
+  # Optional /backups volume
+  backups:
+    enabled: false
+    existingClaim: ""
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 5Gi
+
+  # passthroughs
+  additionalVolumes: []
+  additionalMounts: []
 ...
