@@ -81,7 +81,7 @@ persistence:
   enabled: true
   existingClaim: ""
   storageClass: ""
-  accessMode: ReadWriteOnce
+  accessMode: ReadWriteOncePod
   size: 10Gi
 
   # Optional /backups volume
@@ -98,45 +98,25 @@ persistence:
 
 # Optionally sync Prowlarr's API key (Config.ApiKey in /config/config.xml) into a Kubernetes Secret.
 # NOTE: Helm cannot read the live config PVC during template rendering.
-# This feature uses a post-install/post-upgrade hook Job to read config.xml from the PVC and upsert a Secret.
 apiKeySecret:
   enabled: true
-
-  # If set, chart won't create/sync a secret and will reference this existing secret.
-  existingSecret: ""
-
   # Secret name to create/sync (defaults to "<release>-prowlarr-apikey").
   name: ""
-
   # Key name inside the secret's data.
   key: "apiKey"
-
   # Path to config.xml on the /config volume.
   configXmlPath: "/config/config.xml"
-
   # IMPORTANT: If your /config PVC uses accessMode ReadWriteOncePod, the sync job cannot mount it
   # while the main Prowlarr pod is running (Kubernetes will reject the second mount).
   # In that case either:
   # - switch persistence.accessMode to ReadWriteOnce (or ReadWriteMany if supported), OR
   # - set existingSecret and manage the key externally.
   waitForConfigSeconds: 30
-
   # If true, installation/upgrade fails when config.xml (or ApiKey) can't be read.
   failIfMissing: false
-
-  # Job + RBAC details
-  rbac:
-    create: true
-
   job:
     image:
       repository: "bitnami/kubectl"
       tag: "1.30"
       pullPolicy: IfNotPresent
-
-    ttlSecondsAfterFinished: 300
-    backoffLimit: 1
-
-    # Helm hook behavior
-    hookDeletePolicy: "before-hook-creation,hook-succeeded"
 ...

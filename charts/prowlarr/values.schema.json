@@ -220,20 +220,11 @@
       "additionalProperties": false,
       "properties": {
         "enabled": { "type": "boolean", "default": false },
-        "existingSecret": { "type": "string" },
         "name": { "type": "string" },
         "key": { "type": "string", "default": "apiKey" },
         "configXmlPath": { "type": "string", "default": "/config/config.xml" },
         "waitForConfigSeconds": { "type": "integer", "minimum": 0, "default": 300 },
         "failIfMissing": { "type": "boolean", "default": false },
-        "rbac": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "create": { "type": "boolean", "default": true }
-          },
-          "required": ["create"]
-        },
         "job": {
           "type": "object",
           "additionalProperties": false,
@@ -247,15 +238,12 @@
                 "pullPolicy": { "type": "string", "enum": ["Always", "IfNotPresent", "Never"] }
               },
               "required": ["repository", "tag"]
-            },
-            "ttlSecondsAfterFinished": { "type": "integer", "minimum": 0 },
-            "backoffLimit": { "type": "integer", "minimum": 0 },
-            "hookDeletePolicy": { "type": "string" }
+            }
           },
-          "required": ["image", "hookDeletePolicy"]
+          "required": ["image"]
         }
       },
-      "required": ["enabled", "existingSecret", "name", "key", "configXmlPath", "waitForConfigSeconds", "failIfMissing", "rbac", "job"]
+      "required": ["enabled", "name", "key", "configXmlPath", "waitForConfigSeconds", "failIfMissing", "job"]
     }
   },
 
