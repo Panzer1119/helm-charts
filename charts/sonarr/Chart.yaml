@@ -5,7 +5,7 @@ description: "A Sonarr Helm chart for Kubernetes. Warning This chart is currentl
 type: "application"
 version: "0.1.10"
 # renovate: image=ghcr.io/linuxserver/sonarr
-appVersion: "3.0.10.1567-ls218"
+appVersion: "4.0.16.2944-ls300"
 icon: "https://avatars.githubusercontent.com/u/1082903"
 annotations:
   artifacthub.io/changes: |
