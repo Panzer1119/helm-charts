@@ -46,6 +46,90 @@ spec:
         {{- if .Values.persistence.additionalVolumes }}
           {{- .Values.persistence.additionalVolumes | toYaml | nindent 8 }}
         {{- end }}
+      {{- if .Values.apiKeySecret.enabled }}
+      initContainers:
+        - name: apikey-sync
+          image: "{{ .Values.apiKeySecret.job.image.repository }}:{{ .Values.apiKeySecret.job.image.tag }}"
+          imagePullPolicy: {{ .Values.apiKeySecret.job.image.pullPolicy | default "IfNotPresent" }}
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          env:
+            - name: CONFIG_XML
+              value: {{ .Values.apiKeySecret.configXmlPath | quote }}
+            - name: WAIT_SECONDS
+              value: {{ (.Values.apiKeySecret.waitForConfigSeconds | default 0) | quote }}
+            - name: FAIL_IF_MISSING
+              value: {{ ternary "true" "false" .Values.apiKeySecret.failIfMissing | quote }}
+            - name: SECRET_NAME
+              value: {{ include "prowlarr.apiKeySecretName" . | quote }}
+            - name: SECRET_KEY
+              value: {{ include "prowlarr.apiKeySecretKey" . | quote }}
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: OWNERREF_NAME
+              value: {{ include "prowlarr.fullname" . | quote }}
+          command: [ "/bin/sh", "-c" ]
+          args:
+            - |
+              # This initContainer runs before Prowlarr starts and syncs the API key once.
+
+              wait_for_file() {
+                f="$1"; timeout="$2"
+                if [ "$timeout" -le 0 ]; then
+                  [ -f "$f" ] && return 0 || return 1
+                fi
+                echo "Waiting for $f (timeout: ${timeout}s)"
+                end=$(( $(date +%s) + timeout ))
+                while [ ! -f "$f" ]; do
+                  now=$(date +%s)
+                  if [ "$now" -ge "$end" ]; then
+                    return 1
+                  fi
+                  sleep 5
+                done
+                return 0
+              }
+
+              if ! wait_for_file "$CONFIG_XML" "$WAIT_SECONDS"; then
+                if [ "$FAIL_IF_MISSING" = "true" ]; then
+                  echo "ERROR: config.xml not found at $CONFIG_XML"
+                  exit 1
+                fi
+                echo "config.xml not found; skipping api key sync"
+                exit 0
+              fi
+
+              API_KEY=$(sed -n 's/.*<ApiKey>\([^<]*\)<\/ApiKey>.*/\1/p' "$CONFIG_XML" | head -n 1 | tr -d '\r\n' | tr -d ' ')
+              if [ -z "$API_KEY" ]; then
+                if [ "$FAIL_IF_MISSING" = "true" ]; then
+                  echo "ERROR: ApiKey not found in $CONFIG_XML"
+                  exit 1
+                fi
+                echo "ApiKey not found; skipping api key sync"
+                exit 0
+              fi
+
+              echo "Prowlarr API key found, syncing to secret..."
+
+              kubectl -n "$NAMESPACE" create secret generic "$SECRET_NAME" \
+                --from-literal="$SECRET_KEY=$API_KEY" \
+                --dry-run=client -o json \
+              | kubectl apply -f -
+
+              OWNER_UID=$(kubectl -n "$NAMESPACE" get "Deployment" "$OWNERREF_NAME" -o jsonpath='{.metadata.uid}')
+              if [ -n "$OWNER_UID" ]; then
+                kubectl -n "$NAMESPACE" patch secret "$SECRET_NAME" --type=merge -p "{\"metadata\":{\"ownerReferences\":[{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"name\":\"$OWNERREF_NAME\",\"uid\":\"$OWNER_UID\",\"controller\":true,\"blockOwnerDeletion\":true}]}}"
+              else
+                echo "WARNING: owner UID not found for Deployment/$OWNERREF_NAME; not setting ownerReferences"
+              fi
+
+              echo "Prowlarr API key secret synced: $SECRET_NAME"
+
+              exit 0
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -142,98 +226,6 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-        {{- if .Values.apiKeySecret.enabled }}
-        - name: apikey-sync
-          image: "{{ .Values.apiKeySecret.job.image.repository }}:{{ .Values.apiKeySecret.job.image.tag }}"
-          imagePullPolicy: {{ .Values.apiKeySecret.job.image.pullPolicy | default "IfNotPresent" }}
-          restartPolicy: Never
-          volumeMounts:
-            - name: config
-              mountPath: /config
-          env:
-            - name: CONFIG_XML
-              value: {{ .Values.apiKeySecret.configXmlPath | quote }}
-            - name: WAIT_SECONDS
-              value: {{ (.Values.apiKeySecret.waitForConfigSeconds | default 0) | quote }}
-            - name: FAIL_IF_MISSING
-              value: {{ ternary "true" "false" .Values.apiKeySecret.failIfMissing | quote }}
-            - name: SECRET_NAME
-              value: {{ include "prowlarr.apiKeySecretName" . | quote }}
-            - name: SECRET_KEY
-              value: {{ include "prowlarr.apiKeySecretKey" . | quote }}
-            - name: NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: OWNERREF_NAME
-              value: {{ include "prowlarr.fullname" . | quote }}
-          command: [ "/bin/sh", "-c" ]
-          args:
-            - |
-              # This container runs alongside Prowlarr and syncs the API key once on pod start.
-              # If Prowlarr restarts due to a new pod being created, this container will run again.
-              # (It does not re-run for in-place container restarts inside the same pod.)
-
-              wait_for_file() {
-                f="$1"; timeout="$2"
-                if [ "$timeout" -le 0 ]; then
-                  [ -f "$f" ] && return 0 || return 1
-                fi
-                echo "Waiting for $f (timeout: ${timeout}s)"
-                end=$(( $(date +%s) + timeout ))
-                while [ ! -f "$f" ]; do
-                  now=$(date +%s)
-                  if [ "$now" -ge "$end" ]; then
-                    return 1
-                  fi
-                  sleep 5
-                done
-                return 0
-              }
-
-              if ! wait_for_file "$CONFIG_XML" "$WAIT_SECONDS"; then
-                if [ "$FAIL_IF_MISSING" = "true" ]; then
-                  echo "ERROR: config.xml not found at $CONFIG_XML"
-                  exit 1
-                fi
-                echo "config.xml not found; skipping api key sync"
-                exit 0
-              fi
-
-              API_KEY=$(sed -n 's/.*<ApiKey>\([^<]*\)<\/ApiKey>.*/\1/p' "$CONFIG_XML" | head -n 1 | tr -d '\r\n' | tr -d ' ')
-              if [ -z "$API_KEY" ]; then
-                if [ "$FAIL_IF_MISSING" = "true" ]; then
-                  echo "ERROR: ApiKey not found in $CONFIG_XML"
-                  exit 1
-                fi
-                echo "ApiKey not found; skipping api key sync"
-                exit 0
-              fi
-
-              echo "Prowlarr API key found, syncing to secret..."
-
-              kubectl -n "$NAMESPACE" create secret generic "$SECRET_NAME" \
-                --from-literal="$SECRET_KEY=$API_KEY" \
-                --dry-run=client -o json \
-              | kubectl apply -f -
-
-                OWNER_UID=$(kubectl -n "$NAMESPACE" get "Deployment" "$OWNERREF_NAME" -o jsonpath='{.metadata.uid}')
-                if [ -n "$OWNER_UID" ]; then
-                  kubectl -n "$NAMESPACE" patch secret "$SECRET_NAME" --type=merge -p "{\"metadata\":{\"ownerReferences\":[{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"name\":\"$OWNERREF_NAME\",\"uid\":\"$OWNER_UID\",\"controller\":true,\"blockOwnerDeletion\":true}]}}"
-                else
-                  echo "WARNING: owner UID not found for Deployment/$OWNERREF_NAME; not setting ownerReferences"
-                fi
-
-              echo "Prowlarr API key secret synced: $SECRET_NAME"
-
-              {{- if .Values.apiKeySecret.keepRunning }}
-              # Keep the container alive (optional).
-              tail -f /dev/null
-              {{- else }}
-              # Exit after syncing.
-              exit 0
-              {{- end }}
-        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
