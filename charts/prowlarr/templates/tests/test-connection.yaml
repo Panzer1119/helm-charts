@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "prowlarr.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ include "prowlarr.fullname" . }}:{{ .Values.service.port }}/ping']
   restartPolicy: Never
