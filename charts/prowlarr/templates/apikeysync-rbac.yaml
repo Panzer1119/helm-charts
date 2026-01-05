@@ -1,4 +1,3 @@
-{{- if and .Values.apiKeySecret.enabled (not .Values.apiKeySecret.existingSecret) .Values.apiKeySecret.rbac.create }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -10,7 +9,7 @@ rules:
     resources: ["secrets"]
     resourceNames:
       - {{ include "prowlarr.apiKeySecretName" . | quote }}
-    verbs: ["get", "create", "patch", "update"]
+    verbs: ["create", "delete", "get", "list", "update"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -25,5 +24,4 @@ roleRef:
   kind: Role
   name: {{ include "prowlarr.fullname" . }}-apikey-sync
   apiGroup: rbac.authorization.k8s.io
-{{- end }}
 
