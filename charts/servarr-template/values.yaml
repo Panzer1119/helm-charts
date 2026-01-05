@@ -31,13 +31,13 @@ podSecurityContext: { }
 securityContext: { }
   # capabilities:
   #   drop:
-  #   - ALL
+#   - ALL
 # readOnlyRootFilesystem: true
 # runAsNonRoot: true
 # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  type: None
   port: 80
 
 ingress:
@@ -63,7 +63,7 @@ resources: { }
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
   #   cpu: 100m
-  #   memory: 128Mi
+#   memory: 128Mi
 # requests:
 #   cpu: 100m
 #   memory: 128Mi
@@ -94,6 +94,13 @@ instances:
       PGID: "1001"
       TZ: "Europe/York"
       UMASK: "123"
+    ingress:
+      enabled: true
+      hosts:
+        - host: sonarr.local
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
     persistence:
       backups:
         enabled: true
@@ -137,6 +144,8 @@ defaults:
     PGID: "1000"
     TZ: "Europe/Berlin"
     UMASK: "022"
+  ingress:
+    enabled: false
   persistence:
     config:
       enabled: true
