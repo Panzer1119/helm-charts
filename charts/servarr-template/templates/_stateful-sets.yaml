@@ -1,0 +1,259 @@
+{{- define "servarr-template.stateful-sets" -}}
+{{- range $index, $instanceOriginal := .Values.instances }}
+{{- $instance := merge $instanceOriginal $.Values.defaults }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "servarr-template.instanceFullname" (dict "root" $ "instance" $instance) }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "servarr-template.labels" (dict "root" $ "instance" $instance) | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "servarr-template.selectorLabels" (dict "root" $ "instance" $instance) | nindent 6 }}
+  replicas: 1
+  serviceName: {{ include "servarr-template.instanceFullname" (dict "root" $ "instance" $instance) }}-headless
+  template:
+    metadata:
+      {{- with $.Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "servarr-template.selectorLabels" (dict "root" $ "instance" $instance) | nindent 8 }}
+    spec:
+      {{- with $.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "servarr-template.serviceAccountName" $ }}
+      securityContext:
+        {{- toYaml $.Values.podSecurityContext | nindent 8 }}
+      {{- $syncApiKeySecret := default dict $instance.syncApiKeySecret }}
+      {{- if and $syncApiKeySecret.enabled $instance.persistence $instance.persistence.config $instance.persistence.config.enabled }}
+      initContainers:
+        - name: apikey-sync
+          image: "{{ $syncApiKeySecret.job.image.repository }}:{{ $syncApiKeySecret.job.image.tag }}"
+          imagePullPolicy: {{ $syncApiKeySecret.job.image.pullPolicy | default "IfNotPresent" }}
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          env:
+            - name: CONFIG_XML
+              value: {{ $syncApiKeySecret.configXmlPath | quote }}
+            - name: WAIT_SECONDS
+              value: {{ ($syncApiKeySecret.waitForConfigSeconds | default 0) | quote }}
+            - name: FAIL_IF_MISSING
+              value: {{ ternary "true" "false" $syncApiKeySecret.failIfMissing | quote }}
+            - name: SECRET_NAME
+              value: {{ include "servarr-template.syncApiKeySecretName" (dict "root" $ "instance" $instance) | quote }}
+            - name: SECRET_KEY
+              value: {{ include "servarr-template.syncApiKeySecretKey" (dict "root" $ "instance" $instance) | quote }}
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: OWNERREF_NAME
+              value: {{ include "servarr-template.fullname" $ | quote }}
+          command: [ "/bin/sh", "-c" ]
+          args:
+            - |
+              # This initContainer runs before {{ include "servarr-template.fullname" $ }} starts and syncs the API key once.
+
+              wait_for_file() {
+                f="$1"; timeout="$2"
+                if [ "$timeout" -le 0 ]; then
+                  [ -f "$f" ] && return 0 || return 1
+                fi
+                echo "Waiting for $f (timeout: ${timeout}s)"
+                end=$(( $(date +%s) + timeout ))
+                while [ ! -f "$f" ]; do
+                  now=$(date +%s)
+                  if [ "$now" -ge "$end" ]; then
+                    return 1
+                  fi
+                  sleep 5
+                done
+                return 0
+              }
+
+              if ! wait_for_file "$CONFIG_XML" "$WAIT_SECONDS"; then
+                if [ "$FAIL_IF_MISSING" = "true" ]; then
+                  echo "ERROR: config.xml not found at $CONFIG_XML"
+                  exit 1
+                fi
+                echo "config.xml not found; skipping api key sync"
+                exit 0
+              fi
+
+              API_KEY=$(sed -n 's/.*<ApiKey>\([^<]*\)<\/ApiKey>.*/\1/p' "$CONFIG_XML" | head -n 1 | tr -d '\r\n' | tr -d ' ')
+              if [ -z "$API_KEY" ]; then
+                if [ "$FAIL_IF_MISSING" = "true" ]; then
+                  echo "ERROR: ApiKey not found in $CONFIG_XML"
+                  exit 1
+                fi
+                echo "ApiKey not found; skipping api key sync"
+                exit 0
+              fi
+
+              echo "${OWNERREF_NAME} API key found, syncing to secret..."
+
+              kubectl -n "$NAMESPACE" create secret generic "$SECRET_NAME" \
+                --from-literal="$SECRET_KEY=$API_KEY" \
+                --dry-run=client -o json \
+              | kubectl apply -f -
+
+              OWNER_UID=$(kubectl -n "$NAMESPACE" get "Deployment" "$OWNERREF_NAME" -o jsonpath='{.metadata.uid}')
+              if [ -n "$OWNER_UID" ]; then
+                kubectl -n "$NAMESPACE" patch secret "$SECRET_NAME" --type=merge -p "{\"metadata\":{\"ownerReferences\":[{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"name\":\"$OWNERREF_NAME\",\"uid\":\"$OWNER_UID\",\"controller\":true,\"blockOwnerDeletion\":true}]}}"
+              else
+                echo "WARNING: owner UID not found for Deployment/$OWNERREF_NAME; not setting ownerReferences"
+              fi
+
+              echo "${OWNERREF_NAME} API key secret synced: $SECRET_NAME"
+
+              exit 0
+      {{- end }}
+      containers:
+        - name: {{ include "servarr-template.instanceName" (dict "root" $ "instance" $instance) }}
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          {{- $instanceImage := default (dict) $instance.image }}
+          {{- $image := merge $instanceImage $.Values.image }}
+          image: "{{ $image.repository }}:{{ $image.tag | default $.Chart.AppVersion }}{{- if $image.digest }}@{{ $image.digest }}{{- end }}"
+          imagePullPolicy: {{ $image.pullPolicy | default "IfNotPresent" }}
+          {{- if $instance.persistence }}
+          volumeMounts:
+            {{- range $name, $options := $instance.persistence }}
+            {{- if $options.enabled }}
+            - name: {{ $name }}
+              mountPath: {{ $options.mountPath }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- $instanceService := default (dict) $instance.service }}
+          {{- $service := merge $instanceService $.Values.service }}
+          ports:
+            - name: http
+              containerPort: {{ $service.port }}
+              protocol: TCP
+          env:
+            {{- range $k,$v := $instance.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          {{- $probes := default dict $instance.probes }}
+          {{- $startupProbe := default dict $probes.startup }}
+          {{- if $startupProbe.enabled }}
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: http
+            {{- with $startupProbe }}
+            {{- if hasKey . "initialDelaySeconds" }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            {{- end }}
+            {{- if hasKey . "periodSeconds" }}
+            periodSeconds: {{ .periodSeconds }}
+            {{- end }}
+            {{- if hasKey . "timeoutSeconds" }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            {{- end }}
+            {{- if hasKey . "failureThreshold" }}
+            failureThreshold: {{ .failureThreshold }}
+            {{- end }}
+            {{- if hasKey . "successThreshold" }}
+            successThreshold: {{ .successThreshold }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- $readinessProbe := default dict $probes.readiness }}
+          {{- if $readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            {{- with $readinessProbe }}
+            {{- if hasKey . "initialDelaySeconds" }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            {{- end }}
+            {{- if hasKey . "periodSeconds" }}
+            periodSeconds: {{ .periodSeconds }}
+            {{- end }}
+            {{- if hasKey . "timeoutSeconds" }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            {{- end }}
+            {{- if hasKey . "failureThreshold" }}
+            failureThreshold: {{ .failureThreshold }}
+            {{- end }}
+            {{- if hasKey . "successThreshold" }}
+            successThreshold: {{ .successThreshold }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- $livenessProbe := default dict $probes.liveness }}
+          {{- if $livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            {{- with $livenessProbe }}
+            {{- if hasKey . "initialDelaySeconds" }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            {{- end }}
+            {{- if hasKey . "periodSeconds" }}
+            periodSeconds: {{ .periodSeconds }}
+            {{- end }}
+            {{- if hasKey . "timeoutSeconds" }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            {{- end }}
+            {{- if hasKey . "failureThreshold" }}
+            failureThreshold: {{ .failureThreshold }}
+            {{- end }}
+            {{- if hasKey . "successThreshold" }}
+            successThreshold: {{ .successThreshold }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- $instanceResources := default (dict) $instance.resources }}
+          {{- $resources := merge $instanceResources $.Values.resources }}
+          {{- if $resources }}
+          resources:
+            {{- toYaml $resources | nindent 12 }}
+          {{- end }}
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if $instance.persistence }}
+  volumeClaimTemplates:
+    {{- range $name, $options := $instance.persistence }}
+    {{- if $options.enabled }}
+    - metadata:
+        name: {{ $name }}
+        namespace: {{ $.Release.Namespace }}
+      spec:
+        accessModes:
+          - {{ default "ReadWriteOnce" $options.accessMode | quote }}
+        resources:
+          requests:
+            storage: {{ default "10Gi" $options.size | quote }}
+        {{- if $options.storageClass }}
+        storageClassName: {{ $options.storageClass | quote }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+...
+{{- end }}
+{{- end }}
