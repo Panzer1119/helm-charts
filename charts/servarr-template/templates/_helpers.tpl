@@ -47,7 +47,11 @@ Selector labels
 */}}
 {{- define "servarr-template.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "servarr-template.name" .root }}
+{{- if .instance }}
 app.kubernetes.io/instance: {{ include "servarr-template.instanceName" (dict "root" .root "instance" .instance) }}
+{{- else }}
+app.kubernetes.io/instance: {{ .root.Release.Name }}
+{{- end }}
 {{- end }}
 
 {{/*
