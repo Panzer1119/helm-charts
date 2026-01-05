@@ -158,9 +158,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          command:
-            - /bin/sh
-            - -ec
+          command: [ "/bin/sh", "-c" ]
+          args:
             - |
               # This container runs alongside Prowlarr and syncs the API key once on pod start.
               # If Prowlarr restarts due to a new pod being created, this container will run again.
