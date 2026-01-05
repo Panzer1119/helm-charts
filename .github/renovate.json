@@ -56,12 +56,9 @@
         "docker"
       ],
       "matchPackageNames": [
-        "/^(ghcr|lscr).io\\/linuxserver\\/.*$/",
-        "!ghcr.io/linuxserver/prowlarr",
-        "!ghcr.io/linuxserver/radarr",
-        "!ghcr.io/linuxserver/sonarr"
+        "/^(ghcr|lscr).io\\/linuxserver\\/.*$/"
       ],
-      "versioning": "regex:^version-v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+      "versioning": "regex:^(?:version-)?v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:\\.(?<build>\\d+))?(?:-ls(?<revision>.+))?$"
     }
   ],
   "customManagers": [
