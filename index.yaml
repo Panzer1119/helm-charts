@@ -3,6 +3,28 @@ entries:
   prowlarr:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Fixed option to not keep api key secret sync the container running
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 2.3.0.5236-ls134@sha256:67a8aaedcfd6989f3030b937a6a07007310b1dfc7ee8df16d2cbfa48d1c1158c
+    created: "2026-01-05T04:34:44.996765861Z"
+    description: A Prowlarr Helm chart for Kubernetes. Warning This chart is currently
+      in alpha and hasn't been tested yet.
+    digest: 5d377d74f9ae51b2d49fb7a6b56b3261a46cb767bd8ef87e4b5cd67d5d177451
+    icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/refs/heads/develop/Logo/1024.png
+    name: prowlarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/prowlarr-0.3.10/prowlarr-0.3.10.tgz
+    version: 0.3.10
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Added option to not keep api key secret sync the container running
       artifacthub.io/links: |
@@ -890,4 +912,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-05T04:32:11.700178515Z"
+generated: "2026-01-05T04:34:44.996907876Z"
