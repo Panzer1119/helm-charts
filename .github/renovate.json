@@ -34,8 +34,7 @@
   "packageRules": [
     {
       "matchManagers": [
-        "helm-values",
-        "custom.regex"
+        "helm-values"
       ],
       "pinDigests": false
     },
