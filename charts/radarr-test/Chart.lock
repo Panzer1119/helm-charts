@@ -1,0 +1,6 @@
+dependencies:
+- name: servarr-template
+  repository: file://../servarr-template
+  version: 0.1.0
+digest: sha256:bb9ef71bc224714d432f716b86070b4da1b21a86f63afa1889364ef3def8c585
+generated: "2026-01-05T20:23:40.052344+01:00"

@@ -1,0 +1,1 @@
+{{- include "servarr-template.stateful-sets" . -}}

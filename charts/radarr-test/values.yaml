@@ -1,0 +1,173 @@
+# Default values for radarr-test.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: "ghcr.io/linuxserver/radarr"
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: [ ]
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: { }
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: { }
+
+podSecurityContext: { }
+# fsGroup: 2000
+
+securityContext: { }
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+# runAsUser: 1000
+
+service:
+  type: None
+  port: 8989
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: { }
+    # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: [ ]
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: { }
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+#   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: { }
+
+tolerations: [ ]
+
+affinity: { }
+
+
+instances:
+  - name: standard
+    service:
+      port: 12445
+    image:
+      repository: "ghcr.io/linuxserver/sonarr"
+      tag: ""
+      digest: ""
+    env:
+      PUID: "1002"
+      PGID: "1001"
+      TZ: "Europe/York"
+      UMASK: "123"
+    ingress:
+      enabled: true
+      hosts:
+        - host: sonarr.local
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+    persistence:
+      backups:
+        enabled: true
+      #        existingClaim: "sonarr-backups-claim"
+      config:
+        enabled: true
+        #        existingClaim: ""
+        storageClass: ""
+        size: "20Gi"
+        accessMode: ReadWriteOnce
+  - name: 4k
+    probes:
+      startup:
+        enabled: true
+        # For slow starts, increase failureThreshold or periodSeconds.
+        periodSeconds: 15
+        timeoutSeconds: 5
+        failureThreshold: 40
+      readiness:
+        enabled: true
+      liveness:
+        enabled: true
+        initialDelaySeconds: 150
+        periodSeconds: 60
+        timeoutSeconds: 20
+        failureThreshold: 5
+  - name: anime
+    persistence:
+      backups:
+        enabled: true
+        mountPath: "/backups2"
+        existingClaim: ""
+        storageClass: ""
+        size: "12Gi"
+        accessMode: ReadOnly
+
+defaults:
+  env:
+    PUID: "1000"
+    PGID: "1000"
+    TZ: "Europe/Berlin"
+    UMASK: "022"
+  ingress:
+    enabled: false
+  persistence:
+    config:
+      enabled: true
+      mountPath: "/config"
+      existingClaim: ""
+      storageClass: ""
+      size: "10Gi"
+      accessMode: ReadWriteOncePod
+    backups:
+      enabled: false
+      mountPath: "/backups"
+      existingClaim: ""
+      storageClass: ""
+      size: "10Gi"
+      accessMode: ReadWriteMany
+  syncApiKeySecret:
+    enabled: true
+    job:
+      image:
+        repository: "bitnami/kubectl"
+        tag: "latest"
+        digest: ""
+    configXmlPath: "/config/config.xml"
+    waitForConfigSeconds: 30
+    failIfMissing: false
