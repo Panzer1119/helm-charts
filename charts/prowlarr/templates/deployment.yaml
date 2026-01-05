@@ -65,12 +65,12 @@ spec:
             - name: {{ $k }}
               value: {{ $v | quote }}
             {{- end }}
-          {{- if .Values.probes.liveness.enabled }}
-          livenessProbe:
+          {{- if .Values.probes.startup.enabled }}
+          startupProbe:
             httpGet:
               path: /ping
               port: http
-            {{- with .Values.probes.liveness }}
+            {{- with .Values.probes.startup }}
             {{- if hasKey . "initialDelaySeconds" }}
             initialDelaySeconds: {{ .initialDelaySeconds }}
             {{- end }}
@@ -111,12 +111,12 @@ spec:
             {{- end }}
             {{- end }}
           {{- end }}
-          {{- if .Values.probes.startup.enabled }}
-          startupProbe:
+          {{- if .Values.probes.liveness.enabled }}
+          livenessProbe:
             httpGet:
               path: /ping
               port: http
-            {{- with .Values.probes.startup }}
+            {{- with .Values.probes.liveness }}
             {{- if hasKey . "initialDelaySeconds" }}
             initialDelaySeconds: {{ .initialDelaySeconds }}
             {{- end }}
