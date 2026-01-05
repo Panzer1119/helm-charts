@@ -4,6 +4,28 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: added
+          description: Added option to auto sync Prowlarr's API Key into a Kubernetes Secret
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 2.3.0.5236-ls134@sha256:67a8aaedcfd6989f3030b937a6a07007310b1dfc7ee8df16d2cbfa48d1c1158c
+    created: "2026-01-05T01:57:47.194916214Z"
+    description: A Prowlarr Helm chart for Kubernetes. Warning This chart is currently
+      in alpha and hasn't been tested yet.
+    digest: 573e63285b0407a265131b027488524f12f214fe3acd3698daf7912ec51dbdda
+    icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/refs/heads/develop/Logo/1024.png
+    name: prowlarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/prowlarr-0.3.0/prowlarr-0.3.0.tgz
+    version: 0.3.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
           description: Added a values schema
       artifacthub.io/links: |
         - name: Helm Repo
@@ -626,4 +648,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-05T01:31:55.377778069Z"
+generated: "2026-01-05T01:57:47.194991844Z"
