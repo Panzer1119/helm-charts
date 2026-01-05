@@ -655,6 +655,32 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/radarr-0.1.1/radarr-0.1.1.tgz
     version: 0.1.1
+  radarr-test:
+  - apiVersion: v2
+    appVersion: 4.16.0
+    created: "2026-01-05T21:53:55.216270146Z"
+    dependencies:
+    - name: servarr-template
+      repository: file://../servarr-template
+      version: 0.1.0
+    description: A Helm chart for Kubernetes
+    digest: dcbeeb88457acc4a8a672a3afc299e8393440c5fe3d97f523acde69cf0f54a63
+    name: radarr-test
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/radarr-test-0.1.0/radarr-test-0.1.0.tgz
+    version: 0.1.0
+  servarr-template:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-01-05T21:53:55.446152404Z"
+    description: A Helm chart for Kubernetes
+    digest: 52dd0cac3b83428b568ecf3d25b3cdd3d248ccf695c4d095f59b3d160e931978
+    name: servarr-template
+    type: library
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/servarr-template-0.1.0/servarr-template-0.1.0.tgz
+    version: 0.1.0
   sonarr:
   - annotations:
       artifacthub.io/changes: |
@@ -934,4 +960,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-05T04:42:10.990957094Z"
+generated: "2026-01-05T21:53:55.446228035Z"
