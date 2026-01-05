@@ -146,6 +146,7 @@ spec:
         - name: apikey-sync
           image: "{{ .Values.apiKeySecret.job.image.repository }}:{{ .Values.apiKeySecret.job.image.tag }}"
           imagePullPolicy: {{ .Values.apiKeySecret.job.image.pullPolicy | default "IfNotPresent" }}
+          restartPolicy: Never
           volumeMounts:
             - name: config
               mountPath: /config
