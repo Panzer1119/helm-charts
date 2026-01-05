@@ -201,10 +201,12 @@ spec:
                 exit 0
               fi
 
+              echo "Prowlarr API key found, syncing to secret..."
+
               kubectl -n "$NAMESPACE" create secret generic "$SECRET_NAME" \
                 --from-literal="$SECRET_KEY=$API_KEY" \
                 --dry-run=client -o yaml \
-              | kubectl -n "$NAMESPACE" apply -f -
+              | kubectl apply -f -
 
               echo "Prowlarr API key secret synced: $SECRET_NAME"
 
