@@ -70,6 +70,28 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Updated Radarr to v6
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 6.0.4.10291-ls289
+    created: "2026-01-05T00:36:55.347398182Z"
+    description: A Radarr Helm chart for Kubernetes. Warning This chart is currently
+      in alpha and hasn't been tested yet.
+    digest: eac65b50276aace6faa101c741ec3474d49c429e97a531adca1a6e49fc453eba
+    icon: https://avatars.githubusercontent.com/u/25025331
+    name: radarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/radarr-0.2.0/radarr-0.2.0.tgz
+    version: 0.2.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Formatted Chart.yaml
       artifacthub.io/links: |
         - name: Helm Repo
@@ -238,6 +260,28 @@ entries:
     - https://github.com/Panzer1119/helm-charts/releases/download/radarr-0.1.1/radarr-0.1.1.tgz
     version: 0.1.1
   sonarr:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Updated Sonarr to v4
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 4.0.16.2944-ls300
+    created: "2026-01-05T00:36:55.538698332Z"
+    description: A Sonarr Helm chart for Kubernetes. Warning This chart is currently
+      in alpha and hasn't been tested yet.
+    digest: 300d64bc79e151fb1dce59f40d14937b1c03c967202991464581192f16a14b51
+    icon: https://avatars.githubusercontent.com/u/1082903
+    name: sonarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.2.0/sonarr-0.2.0.tgz
+    version: 0.2.0
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
@@ -450,4 +494,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-05T00:10:57.138429185Z"
+generated: "2026-01-05T00:36:55.538778061Z"
