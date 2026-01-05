@@ -60,3 +60,30 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+API key secret name.
+*/}}
+{{- define "prowlarr.apiKeySecretName" -}}
+{{- if .Values.apiKeySecret.existingSecret -}}
+{{- .Values.apiKeySecret.existingSecret -}}
+{{- else if .Values.apiKeySecret.name -}}
+{{- .Values.apiKeySecret.name -}}
+{{- else -}}
+{{- printf "%s-apikey" (include "prowlarr.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+API key secret data key.
+*/}}
+{{- define "prowlarr.apiKeySecretKey" -}}
+{{- default "apiKey" .Values.apiKeySecret.key -}}
+{{- end -}}
+
+{{/*
+ServiceAccount used by the api key sync job.
+*/}}
+{{- define "prowlarr.apiKeySyncServiceAccountName" -}}
+{{- printf "%s-apikey-sync" (include "prowlarr.fullname" .) -}}
+{{- end -}}
