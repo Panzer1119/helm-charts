@@ -92,6 +92,28 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Pinned Radarr image to a digest
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 6.0.4.10291-ls289@sha256:6c0948b42c149e36bb3dbc0b64d36c77b2d3c9dccf1b424c4f72af1e57ba0c21
+    created: "2026-01-05T01:03:07.20671393Z"
+    description: A Radarr Helm chart for Kubernetes. Warning This chart is currently
+      in alpha and hasn't been tested yet.
+    digest: 59da6424b35e3067320d254fa2d0abc4ad00916595791d975466c2f9d0c92d5a
+    icon: https://avatars.githubusercontent.com/u/25025331
+    name: radarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/radarr-0.2.1/radarr-0.2.1.tgz
+    version: 0.2.1
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Updated Radarr to v6
       artifacthub.io/links: |
         - name: Helm Repo
@@ -282,6 +304,28 @@ entries:
     - https://github.com/Panzer1119/helm-charts/releases/download/radarr-0.1.1/radarr-0.1.1.tgz
     version: 0.1.1
   sonarr:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Pinned Sonarr image to a digest
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 4.0.16.2944-ls300@sha256:8b9f2138ec50fc9e521960868f79d2ad0d529bc610aef19031ea8ff80b54c5e0
+    created: "2026-01-05T01:03:07.445447072Z"
+    description: A Sonarr Helm chart for Kubernetes. Warning This chart is currently
+      in alpha and hasn't been tested yet.
+    digest: 45c7251e55f52f12838e6b235103a423cfc27807cc2b9da68f352c44d7f79ea2
+    icon: https://avatars.githubusercontent.com/u/1082903
+    name: sonarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.2.1/sonarr-0.2.1.tgz
+    version: 0.2.1
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
@@ -516,4 +560,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-05T01:00:40.678810063Z"
+generated: "2026-01-05T01:03:07.445554062Z"
