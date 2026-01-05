@@ -225,8 +225,13 @@ spec:
 
               echo "Prowlarr API key secret synced: $SECRET_NAME"
 
-              # Keep the container alive so it doesn't cause Deployment restarts.
+              {{- if .Values.apiKeySecret.keepRunning }}
+              # Keep the container alive (optional).
               tail -f /dev/null
+              {{- else }}
+              # Exit after syncing.
+              exit 0
+              {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

@@ -225,6 +225,7 @@
         "configXmlPath": { "type": "string", "default": "/config/config.xml" },
         "waitForConfigSeconds": { "type": "integer", "minimum": 0, "default": 300 },
         "failIfMissing": { "type": "boolean", "default": false },
+        "keepRunning": { "type": "boolean", "default": false },
         "job": {
           "type": "object",
           "additionalProperties": false,
@@ -251,7 +252,7 @@
           "required": ["create"]
         }
       },
-      "required": ["enabled", "name", "key", "configXmlPath", "waitForConfigSeconds", "failIfMissing", "rbac", "job"]
+      "required": ["enabled", "name", "key", "configXmlPath", "waitForConfigSeconds", "failIfMissing", "rbac", "job", "keepRunning"]
     }
   },
 

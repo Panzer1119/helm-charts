@@ -110,6 +110,10 @@ apiKeySecret:
   # If true, installation/upgrade fails when config.xml (or ApiKey) can't be read.
   failIfMissing: false
 
+  # If true, keep the sidecar running (tails /dev/null). If false, the container exits after syncing.
+  # Note: When false, the pod is still healthy because Prowlarr is the main container.
+  keepRunning: false
+
   # Create Role/RoleBinding for the pod's service account so the sidecar can upsert the secret.
   rbac:
     create: true
