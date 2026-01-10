@@ -56,6 +56,55 @@
         "/^(ghcr|lscr).io\\/linuxserver\\/.*$/"
       ],
       "versioning": "regex:^(?:version-)?v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:\\.(?<build>\\d+))?(?:-ls(?<revision>.+))?$"
+    },
+    {
+      "description": "Update MariaDB or MySQL on a patch level only, bumps to major and minor versions might break compatibilty with an application",
+      "enabled": false,
+      "matchManagers": [
+        "docker-compose",
+        "dockerfile"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "matchPackageNames": [
+        "/^([^/]+\\/)*(mariadb|mysql)(:.+)?$/"
+      ]
+    },
+    {
+      "description": "Update PostgreSQL on a minor version or patch level only, bumps to major versions might break compatibilty with an application",
+      "enabled": false,
+      "matchManagers": [
+        "docker-compose",
+        "dockerfile"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "matchPackageNames": [
+        "/^([^/]+\\/)*postgres(:.+)?$/"
+      ]
+    },
+    {
+      "description": "Update MariaDB or PostgreSQL to the most recent release if they are standalone and not part of an application stack",
+      "enabled": true,
+      "matchManagers": [
+        "docker-compose",
+        "dockerfile"
+      ],
+      "matchFileNames": [
+        "docker-compose/mariadb/**",
+        "docker-compose/postgres/**"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "matchPackageNames": [
+        "/^([^/]+\\/)*(mariadb|postgres)(:.+)?$/"
+      ]
     }
   ],
   "customManagers": [
