@@ -5,4 +5,5 @@ description: A Helm library chart for shared Servarr Single configurations and t
 type: library
 version: 0.1.0
 appVersion: "1.0.0"
+icon: "https://raw.githubusercontent.com/Servarr/Wiki/refs/heads/master/assets/servarr/servarr_dark_128.png"
 ...
