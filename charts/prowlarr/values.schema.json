@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "servarr-single values",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "registry": { "type": "string" },
+        "repository": { "type": "string" },
+        "pullPolicy": {
+          "type": "string",
+          "enum": ["Always", "IfNotPresent", "Never"]
+        },
+        "tag": { "type": "string" },
+        "digest": { "type": "string" }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "nameOverride": { "type": "string" },
+    "fullnameOverride": { "type": "string" },
+
+    "probes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "startup": { "$ref": "#/definitions/probe" },
+        "readiness": { "$ref": "#/definitions/probe" },
+        "liveness": { "$ref": "#/definitions/probe" }
+      }
+    },
+
+    "extraEnv": {
+      "description": "Environment variables; chart templates render this via toYaml, so it may be a map or a list of EnvVar objects.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": {
+            "type": ["string", "number", "boolean", "null"]
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      ]
+    },
+    "extraEnvFrom": {
+      "type": "array",
+      "items": { "type": "object", "additionalProperties": true }
+    },
+
+    "serviceAccount": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "create": { "type": "boolean" },
+        "automount": { "type": "boolean" },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "name": { "type": "string" }
+      }
+    },
+
+    "podAnnotations": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "podLabels": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+
+    "podSecurityContext": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "fsGroup": { "type": "integer", "minimum": 0 },
+        "fsGroupChangePolicy": { "type": "string" }
+      }
+    },
+
+    "securityContext": {
+      "type": "object",
+      "additionalProperties": true
+    },
+
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "persistence": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "size": { "type": "string" },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "accessModes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            },
+            "accessMode": {
+              "type": "string",
+              "description": "Kept for compatibility with templates (they currently read config.persistence.accessMode)."
+            },
+            "name": { "type": "string" },
+            "volumeName": { "type": "string" },
+            "storageClass": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "syncApiKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "secretName": { "type": "string" },
+        "secretKey": { "type": "string" },
+        "job": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "image": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "repository": { "type": "string" },
+                "tag": { "type": "string" },
+                "digest": { "type": "string" },
+                "pullPolicy": {
+                  "type": "string",
+                  "enum": ["Always", "IfNotPresent", "Never"]
+                }
+              }
+            }
+          }
+        },
+        "configXmlPath": { "type": "string" },
+        "waitForConfigSeconds": { "type": "integer", "minimum": 0 },
+        "failIfMissing": { "type": "boolean" }
+      }
+    },
+
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": "string" },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+      }
+    },
+
+    "ingress": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "className": { "type": "string" },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "host": { "type": "string" },
+              "paths": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "path": { "type": "string" },
+                    "pathType": { "type": "string" }
+                  },
+                  "required": ["path"]
+                }
+              }
+            },
+            "required": ["host", "paths"]
+          }
+        },
+        "tls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "secretName": { "type": "string" },
+              "hosts": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "required": ["secretName", "hosts"]
+          }
+        }
+      }
+    },
+
+    "resources": {
+      "type": "object",
+      "additionalProperties": true
+    },
+
+    "volumes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "volumeMounts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+
+    "nodeSelector": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "tolerations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "affinity": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "probe": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "initialDelaySeconds": { "type": "integer", "minimum": 0 },
+        "periodSeconds": { "type": "integer", "minimum": 1 },
+        "timeoutSeconds": { "type": "integer", "minimum": 1 },
+        "successThreshold": { "type": "integer", "minimum": 1 },
+        "failureThreshold": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}
+
