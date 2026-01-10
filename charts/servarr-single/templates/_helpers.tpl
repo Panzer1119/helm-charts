@@ -74,3 +74,21 @@ Create the name of the role for the apikey sync feature
 {{- define "servarr-single.secretsSyncRoleName" -}}
 {{- printf "%s-secrets-sync" (include "servarr-single.fullname" .) -}}
 {{- end }}
+
+{{/*
+Create the name of the role for the apikey sync feature
+*/}}
+{{- define "servarr-single.syncApiKeySecretName" -}}
+{{- if .Values.syncApiKey.secretName }}
+{{- .Values.syncApiKey.secretName }}
+{{- else }}
+{{- printf "%s-apikey" (include "servarr-single.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create the name of the role for the apikey sync feature
+*/}}
+{{- define "servarr-single.syncApiKeySecretKey" -}}
+{{- default "apiKey" .Values.syncApiKey.secretKey }}
+{{- end }}
