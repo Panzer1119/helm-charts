@@ -63,14 +63,14 @@
   "customManagers": [
     {
       "customType": "regex",
+      "datasourceTemplate": "docker",
       "description": "Update docker image references",
       "managerFilePatterns": [
         "/(^|/)Chart\\.yaml$/"
       ],
       "matchStrings": [
-        "#\\s?renovate:\\simage=(?<depName>.*?)\\s?appVersion:\\s?\\\"?(?<currentValue>[\\w+\\.\\-]*)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\""
-      ],
-      "datasourceTemplate": "docker"
+        "#\\s*renovate:\\s+image=(?<depName>.*?)\\s+appVersion:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)(?:@(?<currentDigest>sha256:[a-f0-9]+))?[\"']?"
+      ]
     }
   ],
   "postUpdateOptions": [
