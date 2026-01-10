@@ -37,7 +37,7 @@ Common labels
 helm.sh/chart: {{ include "servarr-single.chart" . }}
 {{ include "servarr-single.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ (split "@" .Chart.AppVersion)._0 | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
