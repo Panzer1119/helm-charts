@@ -94,6 +94,20 @@ config:
     # Can be used to bind to existing volumes.
     volumeName: ''
 
+# Synchronize the API Key into a Kubernetes Secret
+syncApiKey:
+  enabled: false
+  secretName: ""
+  secretKey: "apiKey"
+  job:
+    image:
+      repository: "bitnami/kubectl"
+      tag: "latest"
+      digest: ""
+  configXmlPath: "/config/config.xml"
+  waitForConfigSeconds: 30
+  failIfMissing: false
+
 service:
   type: None
   port: 80
