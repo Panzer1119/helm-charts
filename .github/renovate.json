@@ -116,6 +116,28 @@
       "matchPackageNames": [
         "/^([^/]+\\/)*heimdall(:.+)?$/"
       ]
+    },
+    {
+      "description": "Track stable releases of Nginx only",
+      "matchManagers": [
+        "docker-compose",
+        "dockerfile"
+      ],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d*[02468])(\\.(?<patch>\\d+))?(?:-(?<compatibility>.*))?$",
+      "matchPackageNames": [
+        "/^([^/]+\\/)*nginx(:.+)?$/"
+      ]
+    },
+    {
+      "description": "Ignore erroneous version tags of Semaphore",
+      "matchManagers": [
+        "docker-compose",
+        "dockerfile"
+      ],
+      "allowedVersions": "!/^v?2\\.19\\.10$/",
+      "matchPackageNames": [
+        "/^([^/]+\\/)*semaphore(:.+)?$/"
+      ]
     }
   ],
   "customManagers": [
