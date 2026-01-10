@@ -1,123 +1,161 @@
 ---
-# Default values for prowlarr.
+# Default values for servarr-single.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
 image:
-  repository: "ghcr.io/linuxserver/prowlarr"
+  registry: ghcr.io
+  repository: linuxserver/prowlarr
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
   digest: ""
 
-imagePullSecrets: []
+imagePullSecrets: [ ]
 nameOverride: ""
 fullnameOverride: ""
 
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-podAnnotations: {}
-podSecurityContext: {}
-# fsGroup: 2000
-securityContext: {}
-
-service:
-  type: ClusterIP
-  port: 9696
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts:
-    - host: prowlarr.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-
-resources: {}
-nodeSelector: {}
-tolerations: []
-affinity: {}
-
-env:
-  PUID: "1000"
-  PGID: "1000"
-  TZ: "Europe/Berlin"
-  UMASK: "022"
-  UMASK_SET: "022"
-
-# Probes that use Prowlarr's health endpoint.
+# Startup / Readiness / Liveness Probes
 probes:
+  # -- Configure startup probe
   startup:
     enabled: true
-    # For slow starts, increase failureThreshold or periodSeconds.
-    periodSeconds: 10
-    timeoutSeconds: 2
-    failureThreshold: 30
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 40
+  # -- Configure readiness probe
   readiness:
     enabled: true
-    periodSeconds: 10
-    timeoutSeconds: 2
-    failureThreshold: 3
-  # Liveness is optional (enabled by default) in case you prefer to rely on startup/readiness only.
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 5
+  # -- Configure liveness probe
   liveness:
     enabled: true
-    initialDelaySeconds: 120
+    initialDelaySeconds: 150
     periodSeconds: 60
     timeoutSeconds: 20
     failureThreshold: 5
 
-persistence:
-  # /config volume
-  enabled: true
-  existingClaim: ""
-  storageClass: ""
-  accessMode: ReadWriteOncePod
-  size: 10Gi
+# -- Environment variables to add to the pods
+extraEnv:
+  PUID: "1000"
+  PGID: "1000"
+  TZ: "Europe/Berlin"
+  UMASK: "022"
+# -- Environment variables from secrets or configmaps to add to the pods
+extraEnvFrom: [ ]
 
-  # Optional /backups volume
-  backups:
-    enabled: false
-    existingClaim: ""
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    size: 5Gi
-
-  # passthroughs
-  additionalVolumes: []
-  additionalMounts: []
-
-# Optionally sync Prowlarr's API key (Config.ApiKey in /config/config.xml) into a Kubernetes Secret.
-# NOTE: Helm cannot read the live config PVC during template rendering.
-apiKeySecret:
-  enabled: true
-  # Secret name to create/sync (defaults to "<release>-prowlarr-apikey").
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Whether the service account token should be automatically mounted.
+  automount: true
+  # Annotations to add to the service account
+  annotations: { }
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
   name: ""
-  # Key name inside the secret's data.
-  key: "apiKey"
-  # Path to config.xml on the /config volume.
-  configXmlPath: "/config/config.xml"
-  waitForConfigSeconds: 30
-  # If true, installation/upgrade fails when config.xml (or ApiKey) can't be read.
-  failIfMissing: false
 
-  # Create Role/RoleBinding for the pod's service account so the initContainer can upsert the secret.
-  rbac:
-    create: true
+podAnnotations: { }
+podLabels: { }
 
-  # Image used by the initContainer (kubectl is used to write the Secret).
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  privileged: false
+  runAsUser: 1000
+  runAsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+# -- Creating PVC to store configuration
+config:
+  persistence:
+    # -- Size of persistent disk
+    size: 10Gi
+    # -- Annotations for PVCs
+    annotations: { }
+    # -- Access modes of persistent disk
+    accessModes:
+      - ReadWriteOncePod
+    # -- Config name
+    name: ''
+    # -- Name of the permanent volume to reference in the claim.
+    # Can be used to bind to existing volumes.
+    volumeName: ''
+
+# Synchronize the API Key into a Kubernetes Secret
+syncApiKey:
+  enabled: true
+  secretName: ""
+  secretKey: "apiKey"
   job:
     image:
       repository: "bitnami/kubectl"
       tag: "latest"
-      pullPolicy: IfNotPresent
+      digest: ""
+  configXmlPath: "/config/config.xml"
+  waitForConfigSeconds: 30
+  failIfMissing: false
+
+service:
+  type: None
+  port: 9696
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: { }
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: prowlarr-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: [ ]
+  #  - secretName: prowlarr-example-tls
+  #    hosts:
+  #      - prowlarr-example.local
+
+resources: { }
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
+
+# -- Additional volumes on the output StatefulSet definition.
+volumes: [ ]
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# -- Additional volumeMounts on the output StatefulSet definition.
+volumeMounts: [ ]
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+nodeSelector: { }
+
+tolerations: [ ]
+
+affinity: { }
 ...
