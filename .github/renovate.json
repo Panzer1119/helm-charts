@@ -105,6 +105,17 @@
       "matchPackageNames": [
         "/^([^/]+\\/)*(mariadb|postgres)(:.+)?$/"
       ]
+    },
+    {
+      "description": "Over time Heimdall changed its versioning schema several times, ensure we only consider the current style",
+      "matchManagers": [
+        "docker-compose",
+        "dockerfile"
+      ],
+      "versioning": "regex:^(?<major>\\d{1,2})\\.(?<minor>\\d+)(\\.(?<patch>\\d+))?$",
+      "matchPackageNames": [
+        "/^([^/]+\\/)*heimdall(:.+)?$/"
+      ]
     }
   ],
   "customManagers": [
