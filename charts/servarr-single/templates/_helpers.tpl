@@ -60,3 +60,10 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create the name of the config pvc to use
+*/}}
+{{- define "servarr-single.configPersistenceName" -}}
+{{- default (printf "%s-config" (include "servarr-single.fullname" .)) .Values.config.persistence.name }}
+{{- end }}

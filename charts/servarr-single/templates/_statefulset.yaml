@@ -1,0 +1,166 @@
+{{- define "servarr-single.statefulset" -}}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "servarr-single.fullname" . }}
+  labels:
+    {{- include "servarr-single.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "servarr-single.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "servarr-single.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "servarr-single.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- $probes := default dict .Values.probes }}
+          {{- $startupProbe := default dict $probes.startup }}
+          {{- if $startupProbe.enabled }}
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: http
+            {{- with $startupProbe }}
+            {{- if hasKey . "initialDelaySeconds" }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            {{- end }}
+            {{- if hasKey . "periodSeconds" }}
+            periodSeconds: {{ .periodSeconds }}
+            {{- end }}
+            {{- if hasKey . "timeoutSeconds" }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            {{- end }}
+            {{- if hasKey . "failureThreshold" }}
+            failureThreshold: {{ .failureThreshold }}
+            {{- end }}
+            {{- if hasKey . "successThreshold" }}
+            successThreshold: {{ .successThreshold }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- $readinessProbe := default dict $probes.readiness }}
+          {{- if $readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            {{- with $readinessProbe }}
+            {{- if hasKey . "initialDelaySeconds" }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            {{- end }}
+            {{- if hasKey . "periodSeconds" }}
+            periodSeconds: {{ .periodSeconds }}
+            {{- end }}
+            {{- if hasKey . "timeoutSeconds" }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            {{- end }}
+            {{- if hasKey . "failureThreshold" }}
+            failureThreshold: {{ .failureThreshold }}
+            {{- end }}
+            {{- if hasKey . "successThreshold" }}
+            successThreshold: {{ .successThreshold }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- $livenessProbe := default dict $probes.liveness }}
+          {{- if $livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            {{- with $livenessProbe }}
+            {{- if hasKey . "initialDelaySeconds" }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            {{- end }}
+            {{- if hasKey . "periodSeconds" }}
+            periodSeconds: {{ .periodSeconds }}
+            {{- end }}
+            {{- if hasKey . "timeoutSeconds" }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            {{- end }}
+            {{- if hasKey . "failureThreshold" }}
+            failureThreshold: {{ .failureThreshold }}
+            {{- end }}
+            {{- if hasKey . "successThreshold" }}
+            successThreshold: {{ .successThreshold }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: config
+              mountPath: /app/config
+          {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "servarr-single.configPersistenceName" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        #TODO Check if the name already includes the statefulsets name etc
+        name: {{ include "servarr-single.configPersistenceName" . }}
+        #TODO Are the labels applied correctly here?
+        {{- with .Values.config.persistence.annotations }}
+        annotations:
+          {{- toYaml . | nindent 4 }}
+        {{- end }}
+      spec:
+        {{- if .Values.config.persistence.volumeName }}
+        volumeName: {{ .Values.config.persistence.volumeName }}
+        {{- end }}
+        accessModes:
+          - {{ default "ReadWriteOncePod" .Values.config.persistence.accessMode | quote }}
+        resources:
+          requests:
+            storage: {{ default "10Gi" .Values.config.persistence.size | quote }}
+        {{- if .Values.config.persistence.storageClass }}
+        storageClassName: {{ .Values.config.persistence.storageClass | quote }}
+        {{- end }}
+...
+{{- end }}
