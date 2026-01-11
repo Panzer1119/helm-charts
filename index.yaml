@@ -4,6 +4,32 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Bump servarr-single dependency to 0.1.11
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 2.3.0.5236-ls134@sha256:67a8aaedcfd6989f3030b937a6a07007310b1dfc7ee8df16d2cbfa48d1c1158c
+    created: "2026-01-11T02:48:32.017372336Z"
+    dependencies:
+    - name: servarr-single
+      repository: file://../servarr-single
+      version: 0.1.11
+    description: A Prowlarr Helm chart for Kubernetes. Warning This chart is currently
+      in alpha and hasn't been tested yet.
+    digest: e8a591f5503c3d7711e6ffa8f74bf1e5d5da188282c448c87381c57e06d28e0c
+    icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/refs/heads/develop/Logo/1024.png
+    name: prowlarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/prowlarr-0.4.11/prowlarr-0.4.11.tgz
+    version: 0.4.11
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Bump servarr-single dependency to 0.1.10
       artifacthub.io/links: |
         - name: Helm Repo
@@ -959,6 +985,28 @@ entries:
   servarr-single:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Switch to a poll-based api key synchronization method
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-01-11T02:48:32.235936614Z"
+    description: A Helm library chart for shared Servarr Single configurations and
+      templates.
+    digest: 496a7fd09c2318e22aec7142dba6335375b8d7421f75bfa8378de73e4d52a57b
+    icon: https://raw.githubusercontent.com/Servarr/Wiki/refs/heads/master/assets/servarr/servarr_dark_128.png
+    name: servarr-single
+    type: library
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/servarr-single-0.1.11/servarr-single-0.1.11.tgz
+    version: 0.1.11
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Changed how the script is passed to the sidecar container
       artifacthub.io/links: |
@@ -1459,4 +1507,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-11T02:33:32.797634441Z"
+generated: "2026-01-11T02:48:32.236452111Z"
