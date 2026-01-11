@@ -986,6 +986,28 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: fixed
+          description: Set service name in stateful set template to avoid conflicts
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-01-11T02:52:58.874795716Z"
+    description: A Helm library chart for shared Servarr Single configurations and
+      templates.
+    digest: f653d0abe17238bf6a4d5354f4cc0c31202d73990b7ceaca0a83cb293d889e8c
+    icon: https://raw.githubusercontent.com/Servarr/Wiki/refs/heads/master/assets/servarr/servarr_dark_128.png
+    name: servarr-single
+    type: library
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/servarr-single-0.1.12/servarr-single-0.1.12.tgz
+    version: 0.1.12
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: fixed
           description: Switch to a poll-based api key synchronization method
       artifacthub.io/links: |
         - name: Helm Repo
@@ -1507,4 +1529,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-11T02:48:32.236452111Z"
+generated: "2026-01-11T02:52:58.875032087Z"
