@@ -62,6 +62,13 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Create the name of the config pvc to use
+*/}}
+{{- define "servarr-single.configPersistenceName" -}}
+{{- default (printf "%s-config" (include "servarr-single.fullname" .)) .Values.config.persistence.name }}
+{{- end }}
+
+{{/*
 Create the name of the role for the apikey sync feature
 */}}
 {{- define "servarr-single.secretsSyncRoleName" -}}

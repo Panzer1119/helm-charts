@@ -207,12 +207,10 @@ spec:
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- if .Values.config.persistence.existingClaim }}
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: {{ .Values.config.persistence.existingClaim }}
-      {{- end }}
+            claimName: {{ .Values.config.persistence.existingClaim | default (include "servarr-single.configPersistenceName" .) }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -225,26 +223,5 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-  {{- if not .Values.config.persistence.existingClaim }}
-  volumeClaimTemplates:
-    - metadata:
-        name: config
-        {{- with .Values.config.persistence.annotations }}
-        annotations:
-          {{- toYaml . | nindent 4 }}
-        {{- end }}
-      spec:
-        {{- if .Values.config.persistence.volumeName }}
-        volumeName: {{ .Values.config.persistence.volumeName }}
-        {{- end }}
-        accessModes:
-          - {{ default "ReadWriteOncePod" .Values.config.persistence.accessMode | quote }}
-        resources:
-          requests:
-            storage: {{ default "10Gi" .Values.config.persistence.size | quote }}
-        {{- with .Values.config.persistence.storageClass }}
-        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
-        {{- end }}
-  {{- end }}
 ...
 {{- end }}
