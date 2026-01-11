@@ -106,6 +106,7 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "existingClaim": { "type": "string" },
             "size": { "type": "string" },
             "annotations": {
               "type": "object",

@@ -210,7 +210,7 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: {{ include "servarr-single.configPersistenceName" . }}
+            claimName: {{ .Values.config.persistence.existingClaim | default (include "servarr-single.configPersistenceName" .) }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -223,6 +223,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- if not .Values.config.persistence.existingClaim }}
   volumeClaimTemplates:
     - metadata:
         name: {{ include "servarr-single.configPersistenceName" . }}
@@ -242,5 +243,6 @@ spec:
         {{- with .Values.config.persistence.storageClass }}
         storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
         {{- end }}
+  {{- end }}
 ...
 {{- end }}
