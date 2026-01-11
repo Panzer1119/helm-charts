@@ -99,6 +99,7 @@ config:
     # -- Name of the permanent volume to reference in the claim.
     # Can be used to bind to existing volumes.
     volumeName: ""
+    storageClass: ""
 
 # Synchronize the API Key into a Kubernetes Secret
 syncApiKey:

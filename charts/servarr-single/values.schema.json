@@ -119,7 +119,7 @@
             },
             "accessMode": {
               "type": "string",
-              "description": "Kept for compatibility with templates (they currently read config.persistence.accessMode)."
+              "description": "Deprecated compatibility alias; prefer config.persistence.accessModes."
             },
             "name": { "type": "string" },
             "volumeName": { "type": "string" },
@@ -136,6 +136,31 @@
         "enabled": { "type": "boolean" },
         "secretName": { "type": "string" },
         "secretKey": { "type": "string" },
+
+        "pushSecret": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "deletionPolicy": {
+              "type": "string",
+              "enum": ["Delete", "Retain"]
+            },
+            "refreshInterval": {
+              "type": "string",
+              "description": "Refresh interval duration string (e.g., 10m0s)."
+            },
+            "secretStoreRefs": {
+              "type": "array",
+              "items": { "type": "object", "additionalProperties": true }
+            },
+            "remoteRef": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+
         "job": {
           "type": "object",
           "additionalProperties": false,
@@ -195,7 +220,10 @@
                   "additionalProperties": false,
                   "properties": {
                     "path": { "type": "string" },
-                    "pathType": { "type": "string" }
+                    "pathType": {
+                      "type": "string",
+                      "enum": ["ImplementationSpecific", "Prefix", "Exact"]
+                    }
                   },
                   "required": ["path"]
                 }
