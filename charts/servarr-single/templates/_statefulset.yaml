@@ -10,6 +10,7 @@ spec:
   selector:
     matchLabels:
       {{- include "servarr-single.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "servarr-single.fullname" . }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
