@@ -225,9 +225,7 @@ spec:
       {{- end }}
   volumeClaimTemplates:
     - metadata:
-        #TODO Check if the name already includes the statefulsets name etc
         name: {{ include "servarr-single.configPersistenceName" . }}
-        #TODO Are the labels applied correctly here?
         {{- with .Values.config.persistence.annotations }}
         annotations:
           {{- toYaml . | nindent 4 }}
