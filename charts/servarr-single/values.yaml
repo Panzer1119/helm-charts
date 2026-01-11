@@ -105,6 +105,12 @@ syncApiKey:
   enabled: false
   secretName: ""
   secretKey: "apiKey"
+  pushSecret:
+    enabled: false
+    deletionPolicy: Delete
+    refreshInterval: 10m0s
+    secretStoreRefs: [ ]
+    remoteRef: { }
   job:
     image:
       repository: "bitnami/kubectl"
