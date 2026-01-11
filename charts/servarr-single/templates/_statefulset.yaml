@@ -207,10 +207,12 @@ spec:
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      {{- if .Values.config.persistence.existingClaim }}
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: {{ .Values.config.persistence.existingClaim | default (include "servarr-single.configPersistenceName" .) }}
+            claimName: {{ .Values.config.persistence.existingClaim }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
