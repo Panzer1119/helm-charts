@@ -51,20 +51,17 @@ fi
 echo "Entering watch loop"
 
 while true; do
-  inotifywait -q -e modify,create,move "${CONFIG_XML}"
-
   API_KEY="$(extract_api_key || true)"
 
   if [ -z "${API_KEY}" ]; then
-    echo "ApiKey missing; ignoring update"
+    sleep ${WAIT_SECONDS}
     continue
   fi
 
-  if [ "${API_KEY}" = "${LAST_KEY}" ]; then
-    continue
+  if [ "${API_KEY}" != "${LAST_KEY}" ]; then
+    update_secret "${API_KEY}"
+    LAST_KEY="${API_KEY}"
   fi
 
-  echo "ApiKey changed, updating Secret"
-  update_secret "${API_KEY}"
-  LAST_KEY="${API_KEY}"
+  sleep ${INTERVAL_SECONDS}
 done

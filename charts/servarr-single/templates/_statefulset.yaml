@@ -132,7 +132,9 @@ spec:
             - name: CONFIG_XML
               value: {{ default "/config/config.xml" .Values.syncApiKey.configXmlPath | quote }}
             - name: WAIT_SECONDS
-              value: {{ (.Values.syncApiKey.waitForConfigSeconds | default 0) | quote }}
+              value: {{ (.Values.syncApiKey.waitForConfigSeconds | default 10) | quote }}
+            - name: INTERVAL_SECONDS
+              value: {{ (.Values.syncApiKey.intervalSeconds | default 30) | quote }}
             - name: FAIL_IF_MISSING
               value: {{ ternary "true" "false" .Values.syncApiKey.failIfMissing | quote }}
             - name: SECRET_NAME
