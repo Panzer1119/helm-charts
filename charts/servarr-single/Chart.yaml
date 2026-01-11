@@ -3,13 +3,13 @@ apiVersion: v2
 name: servarr-single
 description: A Helm library chart for shared Servarr Single configurations and templates.
 type: library
-version: 0.1.9
+version: 0.1.10
 appVersion: "1.0.0"
 icon: "https://raw.githubusercontent.com/Servarr/Wiki/refs/heads/master/assets/servarr/servarr_dark_128.png"
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Fixed security context for containers
+    - kind: changed
+      description: Changed how the script is passed to the sidecar container
   artifacthub.io/links: |
     - name: Helm Repo
       url: https://github.com/Panzer1119/helm-charts
