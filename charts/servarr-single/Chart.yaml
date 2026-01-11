@@ -3,7 +3,7 @@ apiVersion: v2
 name: servarr-single
 description: A Helm library chart for shared Servarr Single configurations and templates.
 type: library
-version: 0.1.12
+version: 0.1.13
 appVersion: "1.0.0"
 icon: "https://raw.githubusercontent.com/Servarr/Wiki/refs/heads/master/assets/servarr/servarr_dark_128.png"
 annotations:
