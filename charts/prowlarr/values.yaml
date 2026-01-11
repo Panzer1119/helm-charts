@@ -63,24 +63,24 @@ serviceAccount:
 podAnnotations: { }
 podLabels: { }
 
-podSecurityContext:
-  fsGroup: 1000
-  fsGroupChangePolicy: OnRootMismatch
+podSecurityContext: { }
+#  fsGroup: 1000
+#  fsGroupChangePolicy: OnRootMismatch
 
-securityContext:
-  allowPrivilegeEscalation: false
-  capabilities:
-    drop:
-      - ALL
-  readOnlyRootFilesystem: true
-  # linuxserver.io images use s6-overlay which needs to set up /run as root.
-  # Keep PUID/PGID in env to run the app process as an unprivileged user.
-  runAsNonRoot: false
-  privileged: false
-  runAsUser: 0
-  runAsGroup: 0
-  seccompProfile:
-    type: RuntimeDefault
+securityContext: { }
+#  allowPrivilegeEscalation: false
+#  capabilities:
+#    drop:
+#      - ALL
+#  readOnlyRootFilesystem: true
+#  # linuxserver.io images use s6-overlay which needs to set up /run as root.
+#  # Keep PUID/PGID in env to run the app process as an unprivileged user.
+#  runAsNonRoot: false
+#  privileged: false
+#  runAsUser: 0
+#  runAsGroup: 0
+#  seccompProfile:
+#    type: RuntimeDefault
 
 # -- Creating PVC to store configuration
 config:
