@@ -76,6 +76,17 @@ Create the name of the role for the apikey sync feature
 {{- end }}
 
 {{/*
+Create the name of the script for the apikey sync feature
+*/}}
+{{- define "servarr-single.syncApiKeyScriptName" -}}
+{{- if .Values.syncApiKey.secretName }}
+{{- .Values.syncApiKey.secretName }}
+{{- else }}
+{{- printf "%s-sync-apikey-script" (include "servarr-single.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Create the name of the role for the apikey sync feature
 */}}
 {{- define "servarr-single.syncApiKeySecretName" -}}
