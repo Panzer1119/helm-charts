@@ -112,6 +112,7 @@ syncApiKey:
       digest: ""
   configXmlPath: "/config/config.xml"
   waitForConfigSeconds: 30
+  intervalSeconds: 30
   failIfMissing: false
 
 service:

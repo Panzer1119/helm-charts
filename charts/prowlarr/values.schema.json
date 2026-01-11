@@ -157,6 +157,7 @@
         },
         "configXmlPath": { "type": "string" },
         "waitForConfigSeconds": { "type": "integer", "minimum": 0 },
+        "intervalSeconds": { "type": "integer", "minimum": 0 },
         "failIfMissing": { "type": "boolean" }
       }
     },
