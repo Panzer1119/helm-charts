@@ -92,3 +92,37 @@ Create the name of the role for the apikey sync feature
 {{- define "servarr-single.syncApiKeySecretKey" -}}
 {{- default "apiKey" .Values.syncApiKey.secretKey }}
 {{- end }}
+
+{{/*
+Render environment variables as a Kubernetes EnvVar list.
+
+Supports either:
+- a map: { FOO: "bar" }
+- a list of EnvVar objects: [ {name: FOO, value: "bar"}, {name: BAR, valueFrom: {...}} ]
+
+Usage:
+  {{ include "servarr-single.envVars" (dict "default" .Values.defaultEnv "extra" .Values.extraEnv) | nindent 12 }}
+*/}}
+{{- define "servarr-single.envVars" -}}
+{{- $default := default (dict) .default -}}
+{{- $extra := default (dict) .extra -}}
+{{- $env := list -}}
+
+{{- /* merge default + extra when extra is a map */ -}}
+{{- if kindIs "map" $extra -}}
+  {{- $merged := merge (deepCopy $default) $extra -}}
+  {{- range $k, $v := $merged -}}
+    {{- $env = append $env (dict "name" $k "value" (printf "%v" $v)) -}}
+  {{- end -}}
+{{- else -}}
+  {{- /* extra is a list: first render default map, then append list items */ -}}
+  {{- range $k, $v := $default -}}
+    {{- $env = append $env (dict "name" $k "value" (printf "%v" $v)) -}}
+  {{- end -}}
+  {{- range $i, $item := $extra -}}
+    {{- $env = append $env $item -}}
+  {{- end -}}
+{{- end -}}
+
+{{- toYaml $env -}}
+{{- end -}}
