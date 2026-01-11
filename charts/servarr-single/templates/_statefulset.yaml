@@ -203,7 +203,7 @@ spec:
           {{- end }}
           volumeMounts:
             - name: config
-              mountPath: /app/config
+              mountPath: /config
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
