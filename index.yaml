@@ -4,6 +4,32 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Bump servarr-single dependency to 0.1.14
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 2.3.0.5236-ls134@sha256:67a8aaedcfd6989f3030b937a6a07007310b1dfc7ee8df16d2cbfa48d1c1158c
+    created: "2026-01-11T03:03:12.052080449Z"
+    dependencies:
+    - name: servarr-single
+      repository: file://../servarr-single
+      version: 0.1.14
+    description: A Prowlarr Helm chart for Kubernetes. Warning This chart is currently
+      in alpha and hasn't been tested yet.
+    digest: 6d6fc314c40126eb1ea9a0a3127a78e1a1ab09690b41babe2cd247eac34eb246
+    icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/refs/heads/develop/Logo/1024.png
+    name: prowlarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/prowlarr-0.4.14/prowlarr-0.4.14.tgz
+    version: 0.4.14
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Bump servarr-single dependency to 0.1.13
       artifacthub.io/links: |
         - name: Helm Repo
@@ -1037,6 +1063,28 @@ entries:
   servarr-single:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Set service type to ClusterIP in values.yaml
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-01-11T03:03:12.376186839Z"
+    description: A Helm library chart for shared Servarr Single configurations and
+      templates.
+    digest: 818da23dd6ca4c447410470c9c1701ec8516008b739ee2e9a1dd39ea60a9dd3e
+    icon: https://raw.githubusercontent.com/Servarr/Wiki/refs/heads/master/assets/servarr/servarr_dark_128.png
+    name: servarr-single
+    type: library
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/servarr-single-0.1.14/servarr-single-0.1.14.tgz
+    version: 0.1.14
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Set service name in stateful set template to avoid conflicts
       artifacthub.io/links: |
@@ -1603,4 +1651,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-11T03:00:10.855238614Z"
+generated: "2026-01-11T03:03:12.377002316Z"
