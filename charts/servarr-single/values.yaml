@@ -116,7 +116,7 @@ syncApiKey:
   failIfMissing: false
 
 service:
-  type: None
+  type: ClusterIP
   port: 80
 
 ingress:
