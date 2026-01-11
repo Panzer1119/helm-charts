@@ -9,12 +9,12 @@ appVersion: "2.3.0.5236-ls134@sha256:67a8aaedcfd6989f3030b937a6a07007310b1dfc7ee
 icon: "https://raw.githubusercontent.com/Prowlarr/Prowlarr/refs/heads/develop/Logo/1024.png"
 dependencies:
   - name: servarr-single
-    version: 0.1.1
+    version: 0.1.2
     repository: file://../servarr-single
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Bump servarr-single dependency to 0.1.1
+    - kind: changed
+      description: Bump servarr-single dependency to 0.1.2
   artifacthub.io/links: |
     - name: Helm Repo
       url: https://github.com/Panzer1119/helm-charts

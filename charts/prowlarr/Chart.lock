@@ -1,6 +1,6 @@
 dependencies:
 - name: servarr-single
   repository: file://../servarr-single
-  version: 0.1.1
-digest: sha256:4a0cc441f632c325f5d3efa075e9837dc80e0f5369d107f668c27a6ada33e30d
-generated: "2026-01-11T00:59:33.5966873+01:00"
+  version: 0.1.2
+digest: sha256:63689b8a9f8caf5d7d8e06ad29b406d2aa9bcbd9d43122eeaed9bd4badf4000d
+generated: "2026-01-11T01:11:08.1137838+01:00"
