@@ -195,10 +195,10 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.extraEnv }}
+          {{- $extraEnv := default (dict) .Values.extraEnv }}
+          {{- $env := merge $extraEnv .Values.defaultEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- toYaml $env | nindent 12 }}
           {{- with .Values.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}

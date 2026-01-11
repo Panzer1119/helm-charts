@@ -38,12 +38,14 @@ probes:
     timeoutSeconds: 20
     failureThreshold: 5
 
-# -- Environment variables to add to the pods
-extraEnv:
+# -- Default Environment variables to add to the pods
+defaultEnv:
   PUID: "1000"
   PGID: "1000"
   TZ: "Europe/Berlin"
   UMASK: "022"
+# -- Environment variables to add to the pods
+extraEnv: { }
 # -- Environment variables from secrets or configmaps to add to the pods
 extraEnvFrom: [ ]
 
@@ -136,7 +138,7 @@ resources: { }
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
-  # requests:
+# requests:
 #   cpu: 100m
 #   memory: 128Mi
 
