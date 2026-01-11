@@ -87,7 +87,7 @@ instances:
     service:
       port: 12445
     image:
-      repository: "ghcr.io/linuxserver/sonarr"
+      #repository: "ghcr.io/linuxserver/sonarr"
       tag: ""
       digest: ""
     env:
