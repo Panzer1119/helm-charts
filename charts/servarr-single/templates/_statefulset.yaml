@@ -228,7 +228,7 @@ spec:
   {{- if not .Values.config.persistence.existingClaim }}
   volumeClaimTemplates:
     - metadata:
-        name: {{ include "servarr-single.configPersistenceName" . }}
+        name: config
         {{- with .Values.config.persistence.annotations }}
         annotations:
           {{- toYaml . | nindent 4 }}
