@@ -239,8 +239,8 @@ spec:
         resources:
           requests:
             storage: {{ default "10Gi" .Values.config.persistence.size | quote }}
-        {{- if .Values.config.persistence.storageClass }}
-        storageClassName: {{ .Values.config.persistence.storageClass | quote }}
+        {{- with .Values.config.persistence.storageClass }}
+        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
         {{- end }}
 ...
 {{- end }}
