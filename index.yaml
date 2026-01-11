@@ -725,6 +725,18 @@ entries:
   servarr-single:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-01-11T00:10:46.744138561Z"
+    description: A Helm library chart for shared Servarr Single configurations and
+      templates.
+    digest: 5dffd6f0a84561c3490b4c1de5b7aafaca3801017568da149774635a805e3d36
+    icon: https://raw.githubusercontent.com/Servarr/Wiki/refs/heads/master/assets/servarr/servarr_dark_128.png
+    name: servarr-single
+    type: library
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/servarr-single-0.1.2/servarr-single-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2026-01-11T00:00:23.5191606Z"
     description: A Helm library chart for shared Servarr Single configurations and
       templates.
@@ -1037,4 +1049,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-11T00:00:23.519362831Z"
+generated: "2026-01-11T00:10:46.744282209Z"
