@@ -1,0 +1,50 @@
+name: Bump Helm chart version
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  bump:
+    if: >
+      github.event.pull_request.merged == true &&
+      github.actor == 'renovate[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Install deps
+        run: |
+          pip install semver yq jq
+
+      - name: Build input JSON
+        run: |
+          echo "[]" > input.json
+
+          for file in $(git diff --name-only HEAD^ HEAD | grep Chart.yaml || true); do
+            OLD_APP=$(git show HEAD^:$file | yq '.appVersion')
+            NEW_APP=$(yq '.appVersion' $file)
+
+            jq \
+              --arg path "$file" \
+              --arg old "$OLD_APP" \
+              --arg new "$NEW_APP" \
+              '. += [{"path": $path, "old_app": $old, "new_app": $new}]' \
+              input.json > tmp.json && mv tmp.json input.json
+          done
+
+          cat input.json
+
+      - name: Run version bump script
+        run: python scripts/bump_chart_versions.py < input.json
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add charts/*/Chart.yaml
+          git diff --cached --quiet || git commit -m "chore: bump chart versions"
+          git push
