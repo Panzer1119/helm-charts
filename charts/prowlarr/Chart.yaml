@@ -5,7 +5,7 @@ description: "A Prowlarr Helm chart for Kubernetes. Warning This chart is curren
 type: "application"
 version: "0.4.15"
 # renovate: image=ghcr.io/linuxserver/prowlarr
-appVersion: "2.3.0.5236-ls138@sha256:a8fe7b9c502f979146b6d0f22438b825c38e068241bb8a708c473062dffdbb03"
+appVersion: "2.3.0.5236-ls139@sha256:9ef5d8bf832edcacb6082f9262cb36087854e78eb7b1c3e1d4375056055b2d82"
 icon: "https://raw.githubusercontent.com/Prowlarr/Prowlarr/refs/heads/develop/Logo/1024.png"
 dependencies:
   - name: servarr-single
