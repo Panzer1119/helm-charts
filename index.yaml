@@ -4,6 +4,32 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Bump servarr-single dependency to 0.1.16
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 2.4.0.5397-ls149@sha256:a46d0ce0a8236bc4e065fe7c91a55d026c9d849620c5845250519b977d8857f3
+    created: "2026-06-11T22:04:41.543263028Z"
+    dependencies:
+    - name: servarr-single
+      repository: file://../servarr-single
+      version: 0.1.16
+    description: A Prowlarr Helm chart for Kubernetes. Warning This chart is currently
+      in alpha and hasn't been tested yet.
+    digest: 8814e526e428b99bfd78506ce3c7cc17e111b1c1df1d42acba7150e0ffc1ac83
+    icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/refs/heads/develop/Logo/1024.png
+    name: prowlarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/prowlarr-0.4.16/prowlarr-0.4.16.tgz
+    version: 0.4.16
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Bump servarr-single dependency to 0.1.15
       artifacthub.io/links: |
         - name: Helm Repo
@@ -979,6 +1005,28 @@ entries:
   servarr-single:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Reworked ApiKey synchronization script
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-06-11T22:04:41.87198589Z"
+    description: A Helm library chart for shared Servarr Single configurations and
+      templates.
+    digest: 1cc4bf7055a4dd0967cbd28e5ab1f88c6b039dd269dc809dba21f37e9328f06f
+    icon: https://raw.githubusercontent.com/Servarr/Wiki/refs/heads/master/assets/servarr/servarr_dark_128.png
+    name: servarr-single
+    type: library
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/servarr-single-0.1.16/servarr-single-0.1.16.tgz
+    version: 0.1.16
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Added optional PushSecret support
       artifacthub.io/links: |
@@ -1589,4 +1637,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-13T15:52:11.96599378Z"
+generated: "2026-06-11T22:04:42.003307391Z"
