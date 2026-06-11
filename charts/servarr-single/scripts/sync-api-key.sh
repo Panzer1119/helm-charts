@@ -1,67 +1,68 @@
 #!/bin/sh
 set -eu
 
-LAST_KEY=""
+log() {
+  echo "$*"
+}
 
-extract_api_key() {
+read_current_api_key() {
   sed -n 's/.*<ApiKey>\([^<]*\)<\/ApiKey>.*/\1/p' "${CONFIG_XML}" \
     | head -n 1 \
     | tr -d '\r\n '
 }
 
-get_secret_key() {
+get_secret_api_key() {
   kubectl -n "${NAMESPACE}" get secret "${SECRET_NAME}" \
     -o jsonpath="{.data.${SECRET_KEY}}" 2>/dev/null \
   | base64 -d 2>/dev/null || true
 }
 
-update_secret() {
+set_secret_api_key() {
   api_key="${1}"
 
   kubectl -n "${NAMESPACE}" patch secret "${SECRET_NAME}" --type=merge -p "{
     \"data\": {
       \"${SECRET_KEY}\": \"$(printf '%s' "${api_key}" | base64 | tr -d '\n')\"
     }
-  }"
+  }" >/dev/null
 }
 
-echo "Waiting for config.xml..."
-
 while [ ! -f "${CONFIG_XML}" ]; do
+  log "Waiting for file '${CONFIG_XML}' to exist..."
   sleep 2
 done
 
-echo "config.xml found, initializing state"
+log "Found file '${CONFIG_XML}'"
 
-# Initialize LAST_KEY from the existing secret
-LAST_KEY="$(get_secret_key || true)"
-
-if API_KEY="$(extract_api_key)" && [ -n "${API_KEY}" ]; then
-  if [ "${API_KEY}" != "${LAST_KEY}" ]; then
-    echo "Initial ApiKey differs from Secret, syncing"
-    update_secret "${API_KEY}"
-    LAST_KEY="${API_KEY}"
-  else
-    echo "Secret already up to date"
-  fi
-else
-  echo "ApiKey not present yet; waiting for changes"
-fi
-
-echo "Entering watch loop"
+LAST_CURRENT_API_KEY="$(read_current_api_key || true)"
+LAST_SECRET_API_KEY="$(get_secret_api_key || true)"
 
 while true; do
-  API_KEY="$(extract_api_key || true)"
-
-  if [ -z "${API_KEY}" ]; then
+  CURRENT_API_KEY="$(read_current_api_key || true)"
+  if [ -z "${CURRENT_API_KEY}" ]; then
+    LAST_CURRENT_API_KEY="${CURRENT_API_KEY}"
+    log "Waiting for ApiKey to be present in '${CONFIG_XML}'..."
     sleep "${WAIT_SECONDS}"
     continue
   fi
 
-  if [ "${API_KEY}" != "${LAST_KEY}" ]; then
-    update_secret "${API_KEY}"
-    LAST_KEY="${API_KEY}"
+  SECRET_API_KEY="$(get_secret_api_key || true)"
+  if [ "${CURRENT_API_KEY}" != "${SECRET_API_KEY}" ]; then
+    if [ -z "${LAST_CURRENT_API_KEY}" ] && [ -z "${LAST_SECRET_API_KEY}" ]; then
+      log "ApiKey initialized for the first time"
+    elif [ "${CURRENT_API_KEY}" != "${LAST_CURRENT_API_KEY}" ]; then
+      log "ApiKey changed in '${CONFIG_XML}'"
+    elif [ "${SECRET_API_KEY}" != "${LAST_SECRET_API_KEY}" ]; then
+      log "ApiKey changed in Kubernetes secret"
+    else
+      log "ApiKey changed, but unable to determine source of change"
+    fi
+    set_secret_api_key "${CURRENT_API_KEY}"
+    log "Kubernetes secret synchronized"
   fi
 
+  LAST_CURRENT_API_KEY="${CURRENT_API_KEY}"
+  LAST_SECRET_API_KEY="${SECRET_API_KEY}"
+  log "Watching for ApiKey changes..."
   sleep "${INTERVAL_SECONDS}"
 done
