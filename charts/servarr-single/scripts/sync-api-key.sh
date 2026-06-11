@@ -107,7 +107,7 @@ while true; do
     elif [ "${SECRET_API_KEY}" != "${LAST_SECRET_API_KEY}" ]; then
       log "ApiKey changed in Kubernetes secret"
     else
-      log "ApiKey changed, but unable to determine source of change"
+      log "ApiKey changed"
     fi
 
     if set_secret_api_key "${CURRENT_API_KEY}"; then
@@ -115,10 +115,10 @@ while true; do
     else
       log "Failed to patch Kubernetes secret '${SECRET_NAME}', will retry"
     fi
+    log "Watching for ApiKey changes..."
   fi
 
   LAST_CURRENT_API_KEY="${CURRENT_API_KEY}"
   LAST_SECRET_API_KEY="${SECRET_API_KEY}"
-  log "Watching for ApiKey changes..."
   sleep "${INTERVAL_SECONDS}"
 done
