@@ -4,6 +4,32 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Bump servarr-single dependency to 0.1.18
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 2.4.0.5397-ls149@sha256:a46d0ce0a8236bc4e065fe7c91a55d026c9d849620c5845250519b977d8857f3
+    created: "2026-06-11T22:28:02.522843316Z"
+    dependencies:
+    - name: servarr-single
+      repository: file://../servarr-single
+      version: 0.1.18
+    description: A Prowlarr Helm chart for Kubernetes. Warning This chart is currently
+      in alpha and hasn't been tested yet.
+    digest: 1d501e107cdbee77bb2be0221e91bdc1d729c28dfb21cdaa805a02e152af789b
+    icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/refs/heads/develop/Logo/1024.png
+    name: prowlarr
+    type: application
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/prowlarr-0.4.18/prowlarr-0.4.18.tgz
+    version: 0.4.18
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Bump servarr-single dependency to 0.1.17
       artifacthub.io/links: |
         - name: Helm Repo
@@ -1041,6 +1067,28 @@ entries:
           email: panzer1119@gmail.com
     apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-06-11T22:28:02.66916155Z"
+    description: A Helm library chart for shared Servarr Single configurations and
+      templates.
+    digest: 2ab937b9728444d7426981733a69310591cf2ebcef3e28df431f01d70bdccdb8
+    icon: https://raw.githubusercontent.com/Servarr/Wiki/refs/heads/master/assets/servarr/servarr_dark_128.png
+    name: servarr-single
+    type: library
+    urls:
+    - https://github.com/Panzer1119/helm-charts/releases/download/servarr-single-0.1.18/servarr-single-0.1.18.tgz
+    version: 0.1.18
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Changed ApiKey synchronization script
+      artifacthub.io/links: |
+        - name: Helm Repo
+          url: https://github.com/Panzer1119/helm-charts
+      artifacthub.io/maintainers: |
+        - name: Paul Hagedorn
+          email: panzer1119@gmail.com
+    apiVersion: v2
+    appVersion: 1.0.0
     created: "2026-06-11T22:21:46.146803385Z"
     description: A Helm library chart for shared Servarr Single configurations and
       templates.
@@ -1685,4 +1733,4 @@ entries:
     urls:
     - https://github.com/Panzer1119/helm-charts/releases/download/sonarr-0.1.0/sonarr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-06-11T22:21:46.147137754Z"
+generated: "2026-06-11T22:28:02.669987608Z"
