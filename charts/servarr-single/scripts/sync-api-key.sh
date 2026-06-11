@@ -81,6 +81,7 @@ while [ ! -f "${CONFIG_XML}" ]; do
 done
 
 log "Found file '${CONFIG_XML}'"
+log "Watching for ApiKey changes..."
 
 LAST_CURRENT_API_KEY="$(read_current_api_key || true)"
 LAST_SECRET_API_KEY="$(get_secret_api_key || true)"
