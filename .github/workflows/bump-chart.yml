@@ -2,13 +2,13 @@ name: Bump Helm chart version
 
 on:
   pull_request:
-    types: [closed]
+    types: [ closed ]
+    #branches: [ main ]
+    paths: [ 'charts/*/Chart.yaml' ]
 
 jobs:
   bump:
-    if: >
-      github.event.pull_request.merged == true &&
-      github.actor == 'renovate[bot]'
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
