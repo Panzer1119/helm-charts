@@ -54,7 +54,7 @@ while true; do
   API_KEY="$(extract_api_key || true)"
 
   if [ -z "${API_KEY}" ]; then
-    sleep ${WAIT_SECONDS}
+    sleep "${WAIT_SECONDS}"
     continue
   fi
 
@@ -63,5 +63,5 @@ while true; do
     LAST_KEY="${API_KEY}"
   fi
 
-  sleep ${INTERVAL_SECONDS}
+  sleep "${INTERVAL_SECONDS}"
 done
