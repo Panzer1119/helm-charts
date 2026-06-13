@@ -73,7 +73,9 @@ class ParsedAppVersion:
     digest_suffix: str | None = None
 
     def __str__(self) -> str:
-        return f"{self.version}@{self.digest_suffix or ''}"
+        if self.digest_suffix:
+            return f"{self.version}@{self.digest_suffix}"
+        return f"{self.version}"
 
 
 def parse_semver(version: str, optional_minor_and_patch: bool) -> semver.Version:
