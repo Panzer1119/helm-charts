@@ -41,7 +41,7 @@ jobs:
           for file in $(git diff --name-only origin/${{ github.base_ref }} HEAD | grep Chart.yaml || true); do
             OLD_APP=$(git show origin/${{ github.base_ref }}:${file} | yq '.appVersion')
             OLD_CHART=$(git show origin/${{ github.base_ref }}:${file} | yq '.version')
-            python scripts/bump_chart_version.py "${file}" "${OLD_APP}" "${OLD_CHART}"
+            python scripts/bump_chart_version.py --in-place "${file}" "${OLD_APP}" "${OLD_CHART}"
           done
 
       - name: Commit changes
