@@ -100,6 +100,10 @@ def parse_app_version(version: str, optional_minor_and_patch: bool) -> ParsedApp
         digest_suffix = digest_match.group(1)
         semver_part = raw[:digest_match.start()]
 
+    # Common chart/app tags use a leading "v" (for example v1.2.3).
+    if semver_part.startswith(("v", "V")):
+        semver_part = semver_part[1:]
+
     parsed = parse_semver(semver_part, optional_minor_and_patch=optional_minor_and_patch)
     return ParsedAppVersion(version=parsed, digest_suffix=digest_suffix)
 
