@@ -2,20 +2,21 @@ name: Bump Helm chart version
 
 on:
   pull_request:
-    types: [ closed ]
+    #types: [ closed ]
     #branches: [ main ]
     paths: [ 'charts/*/Chart.yaml' ]
 
 jobs:
   bump:
-    if: github.event.pull_request.merged == true
+    #if: github.event.pull_request.merged == true
+    if: github.event.pull_request.user.login == 'renovate[bot]'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6
@@ -27,33 +28,20 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@gmail.com"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@gmail.com"
 
       - name: Install deps
         run: |
-          pip install semver yq jq
+          pip install pyyaml semver
 
-      - name: Build input JSON
+      - name: Bump chart versions
         run: |
-          echo "[]" > input.json
-
-          for file in $(git diff --name-only HEAD^ HEAD | grep Chart.yaml || true); do
-            OLD_APP=$(git show HEAD^:$file | yq '.appVersion')
-            NEW_APP=$(yq '.appVersion' $file)
-
-            jq \
-              --arg path "$file" \
-              --arg old "$OLD_APP" \
-              --arg new "$NEW_APP" \
-              '. += [{"path": $path, "old_app": $old, "new_app": $new}]' \
-              input.json > tmp.json && mv tmp.json input.json
+          for file in $(git diff --name-only ${{ github.base_ref }} HEAD | grep Chart.yaml || true); do
+            OLD_APP=$(git show ${{ github.base_ref }}:${file} | yq '.appVersion')
+            OLD_CHART=$(git show ${{ github.base_ref }}:${file} | yq '.version')
+            python scripts/bump_chart_version.py "${file}" "${OLD_APP}" "${OLD_CHART}"
           done
-
-          cat input.json
-
-      - name: Run version bump script
-        run: python scripts/bump_chart_versions.py < input.json
 
       - name: Commit changes
         run: |
