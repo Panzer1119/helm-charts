@@ -90,7 +90,11 @@ def parse_semver(version: str, optional_minor_and_patch: bool) -> semver.Version
 
 
 def parse_app_version(version: str, optional_minor_and_patch: bool) -> ParsedAppVersion:
-    """Parse appVersion with optional @sha256 digest suffix."""
+    """Parse appVersion with optional @sha256 digest suffix.
+
+    Non-standard 4-part numeric versions (for example 2.5.1.4524)
+    are normalized to semver build metadata form (2.5.1+4524).
+    """
     raw = version.strip()
     digest_suffix: str | None = None
     semver_part = raw
@@ -103,6 +107,27 @@ def parse_app_version(version: str, optional_minor_and_patch: bool) -> ParsedApp
     # Common chart/app tags use a leading "v" (for example v1.2.3).
     if semver_part.startswith(("v", "V")):
         semver_part = semver_part[1:]
+
+    four_part_match = re.fullmatch(
+        r"^(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\.(?P<build>\d+)"
+        r"(?P<prerelease>-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?"
+        r"(?P<metadata>\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$",
+        semver_part,
+    )
+    if four_part_match:
+        build_parts = []
+        existing_metadata = four_part_match.group("metadata")
+        if existing_metadata:
+            build_parts.append(existing_metadata[1:])
+        else:
+            build_parts.append("build")
+        build_parts.append(four_part_match.group("build"))
+        semver_part = (
+            f"{four_part_match.group('major')}.{four_part_match.group('minor')}."
+            f"{four_part_match.group('patch')}"
+            f"{four_part_match.group('prerelease') or ''}"
+            f"+{'.'.join(build_parts)}"
+        )
 
     parsed = parse_semver(semver_part, optional_minor_and_patch=optional_minor_and_patch)
     return ParsedAppVersion(version=parsed, digest_suffix=digest_suffix)
