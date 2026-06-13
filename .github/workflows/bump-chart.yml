@@ -37,9 +37,9 @@ jobs:
 
       - name: Bump chart versions
         run: |
-          for file in $(git diff --name-only ${{ github.base_ref }} HEAD | grep Chart.yaml || true); do
-            OLD_APP=$(git show ${{ github.base_ref }}:${file} | yq '.appVersion')
-            OLD_CHART=$(git show ${{ github.base_ref }}:${file} | yq '.version')
+          for file in $(git diff --name-only origin/${{ github.base_ref }} HEAD | grep Chart.yaml || true); do
+            OLD_APP=$(git show origin/${{ github.base_ref }}:${file} | yq '.appVersion')
+            OLD_CHART=$(git show origin/${{ github.base_ref }}:${file} | yq '.version')
             python scripts/bump_chart_version.py "${file}" "${OLD_APP}" "${OLD_CHART}"
           done
 
