@@ -7,9 +7,9 @@ Policy lookup order in Chart.yaml:
 
 Supported policy formats:
 - Preset string:
-  - default       -> major:minor, minor:minor, patch:patch, prerelease:none, build:none, downgrade:none, unknown:none
-  - mirror        -> major:major, minor:minor, patch:patch, prerelease:none, build:none, downgrade:none, unknown:none
-  - ignore-major  -> major:none,  minor:minor, patch:patch, prerelease:none, build:none, downgrade:none, unknown:none
+  - default       -> major:minor, minor:minor, patch:patch, prerelease:none, build:none, digest:none, downgrade:none, unknown:none
+  - mirror        -> major:major, minor:minor, patch:patch, prerelease:none, build:none, digest:none, downgrade:none, unknown:none
+  - ignore-major  -> major:none,  minor:minor, patch:patch, prerelease:none, build:none, digest:none, downgrade:none, unknown:none
 - Mapping (YAML object), for example:
   renovate:
     appVersionPolicy:
@@ -18,10 +18,11 @@ Supported policy formats:
       patch: patch
       prerelease: none
       build: none
+      digest: none
       downgrade: none
       unknown: none
 - Assignment string, for example:
-  renovate.appVersionPolicy: "major=major,minor=minor,patch=patch,prerelease=none,build=none,downgrade=none,unknown=none""
+  renovate.appVersionPolicy: "major=major,minor=minor,patch=patch,prerelease=none,build=none,digest=none,downgrade=none,unknown=none"
 """
 
 from __future__ import annotations
@@ -38,18 +39,18 @@ import yaml
 import semver
 
 VersionPart = Literal["major", "minor", "patch"]
-ExtendedVersionPart = VersionPart | Literal["prerelease", "build"]
+ExtendedVersionPart = VersionPart | Literal["prerelease", "build", "digest"]
 
 AppChange = ExtendedVersionPart | Literal["none", "downgrade", "unknown"]
 ChartBump = VersionPart | Literal["none"]
 
 PRESET_POLICIES: dict[str, dict[AppChange, ChartBump]] = {
     "default": {"major": "minor", "minor": "minor", "patch": "patch", "prerelease": "none", "build": "none",
-                "downgrade": "none", "unknown": "none"},
+                "digest": "none", "downgrade": "none", "unknown": "none"},
     "mirror": {"major": "major", "minor": "minor", "patch": "patch", "prerelease": "none", "build": "none",
-               "downgrade": "none", "unknown": "none"},
+               "digest": "none", "downgrade": "none", "unknown": "none"},
     "ignore-major": {"major": "none", "minor": "minor", "patch": "patch", "prerelease": "none", "build": "none",
-                     "downgrade": "none", "unknown": "none"},
+                     "digest": "none", "downgrade": "none", "unknown": "none"},
 }
 DEFAULT_POLICY: dict[AppChange, ChartBump] = PRESET_POLICIES["default"]
 
@@ -66,6 +67,15 @@ class Decision:
     reason: str
 
 
+@dataclass(frozen=True)
+class ParsedAppVersion:
+    version: semver.Version
+    digest_suffix: str | None = None
+
+    def __str__(self) -> str:
+        return f"{self.version}@{self.digest_suffix or ''}"
+
+
 def parse_semver(version: str, optional_minor_and_patch: bool) -> semver.Version:
     """Parse semver with library validation and a consistent error message."""
     try:
@@ -77,23 +87,40 @@ def parse_semver(version: str, optional_minor_and_patch: bool) -> semver.Version
         raise ValueError(f"Invalid semver version: {version!r}") from exc
 
 
-def detect_app_change(old_version: semver.Version, new_version: semver.Version) -> AppChange:
+def parse_app_version(version: str, optional_minor_and_patch: bool) -> ParsedAppVersion:
+    """Parse appVersion with optional @sha256 digest suffix."""
+    raw = version.strip()
+    digest_suffix: str | None = None
+    semver_part = raw
+
+    digest_match = re.search(r"@(sha256:[0-9a-fA-F]{64})$", raw)
+    if digest_match:
+        digest_suffix = digest_match.group(1)
+        semver_part = raw[:digest_match.start()]
+
+    parsed = parse_semver(semver_part, optional_minor_and_patch=optional_minor_and_patch)
+    return ParsedAppVersion(version=parsed, digest_suffix=digest_suffix)
+
+
+def detect_app_change(old_version: ParsedAppVersion, new_version: ParsedAppVersion) -> AppChange:
     """Classify appVersion change level from old -> new."""
 
-    if new_version < old_version:
+    if new_version.version < old_version.version:
         return "downgrade"
     elif new_version == old_version:
         return "none"
-    elif new_version.major != old_version.major:
+    elif new_version.version.major != old_version.version.major:
         return "major"
-    elif new_version.minor != old_version.minor:
+    elif new_version.version.minor != old_version.version.minor:
         return "minor"
-    elif new_version.patch != old_version.patch:
+    elif new_version.version.patch != old_version.version.patch:
         return "patch"
-    elif new_version.prerelease != old_version.prerelease:
+    elif new_version.version.prerelease != old_version.version.prerelease:
         return "prerelease"
-    elif new_version.build != old_version.build:
+    elif new_version.version.build != old_version.version.build:
         return "build"
+    elif new_version.digest_suffix != old_version.digest_suffix:
+        return "digest"
     else:
         return "unknown"
 
@@ -205,9 +232,9 @@ def parse_assignment_policy(raw: str) -> dict[AppChange, ChartBump]:
                 f"Invalid policy token {part!r}; expected format key=value"
             )
         key, value = [piece.strip().lower() for piece in part.split("=", 1)]
-        if key not in {"major", "minor", "patch", "prerelease", "build", "downgrade", "unknown"}:
+        if key not in {"major", "minor", "patch", "prerelease", "build", "digest", "downgrade", "unknown"}:
             raise ValueError(
-                f"Invalid policy key {key!r}; expected one of: major, minor, patch, prerelease, build, downgrade, unknown"
+                f"Invalid policy key {key!r}; expected one of: major, minor, patch, prerelease, build, digest, downgrade, unknown"
             )
         mapping[key] = normalize_policy_bump(value, key)
 
@@ -227,7 +254,7 @@ def resolve_policy(raw_policy: Any) -> dict[AppChange, ChartBump]:
 
     if isinstance(raw_policy, dict):
         result = dict(DEFAULT_POLICY)
-        for key in ("major", "minor", "patch", "prerelease", "build", "downgrade", "unknown"):
+        for key in ("major", "minor", "patch", "prerelease", "build", "digest", "downgrade", "unknown"):
             if key in raw_policy:
                 result[key] = normalize_policy_bump(raw_policy[key], key)
         return result
@@ -239,8 +266,8 @@ def resolve_policy(raw_policy: Any) -> dict[AppChange, ChartBump]:
 
 
 def decide_chart_version(
-        old_app_version: semver.Version,
-        new_app_version: semver.Version,
+        old_app_version: ParsedAppVersion,
+        new_app_version: ParsedAppVersion,
         old_chart_version: semver.Version,
         policy: dict[AppChange, ChartBump],
 ) -> Decision:
@@ -322,27 +349,27 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     try:
-        chart_data = read_chart_file(args.chart_path)
+        chart_data: dict[str, Any] = read_chart_file(args.chart_path)
 
-        new_app_version = chart_data.get("appVersion")
+        new_app_version: Any | None = chart_data.get("appVersion")
         if not isinstance(new_app_version, str) or not new_app_version.strip():
             raise ValueError("Chart.yaml must include a non-empty string appVersion")
 
-        old_app_version = parse_semver(
-            args.old_app_version,
-            optional_minor_and_patch=args.optional_minor_and_patch,
-        )
-        old_chart_version = parse_semver(
+        old_chart_version: semver.Version = parse_semver(
             args.old_chart_version,
             optional_minor_and_patch=args.optional_minor_and_patch,
         )
-        parsed_new_app_version = parse_semver(
+        old_app_version: ParsedAppVersion = parse_app_version(
+            args.old_app_version,
+            optional_minor_and_patch=args.optional_minor_and_patch,
+        )
+        parsed_new_app_version: ParsedAppVersion = parse_app_version(
             new_app_version,
             optional_minor_and_patch=args.optional_minor_and_patch,
         )
 
-        raw_policy = get_policy_value(chart_data)
-        policy = resolve_policy(raw_policy)
+        raw_policy: Any = get_policy_value(chart_data)
+        policy: dict[AppChange, ChartBump] = resolve_policy(raw_policy)
 
         decision = decide_chart_version(
             old_app_version=old_app_version,
@@ -354,7 +381,7 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(str(exc))
 
     if args.in_place and decision.should_bump:
-        changed = update_chart_version_in_place(
+        changed: bool = update_chart_version_in_place(
             args.chart_path,
             decision.new_chart_version,
         )
