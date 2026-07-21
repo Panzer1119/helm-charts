@@ -5,7 +5,7 @@ description: "A Radarr Helm chart for Kubernetes. Warning This chart is currentl
 type: "application"
 version: "0.2.2"
 # renovate: image=ghcr.io/linuxserver/radarr
-appVersion: "6.2.1.10461-ls310@sha256:549c4a075496cf7584593bdc041407ddb38ee8958df8cf99938f8821467ea6f8"
+appVersion: "6.3.0.10514-ls312@sha256:e35056574cdc695a9ee745aa1ecda9eab3842450bf4b7b8471b023790fa3861d"
 icon: "https://avatars.githubusercontent.com/u/25025331"
 annotations:
   artifacthub.io/changes: |
